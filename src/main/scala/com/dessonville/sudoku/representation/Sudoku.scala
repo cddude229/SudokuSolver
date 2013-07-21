@@ -42,6 +42,17 @@ trait Sudoku[R] {
   def getBox(col: Int, row: Int): Iterable[Iterable[R]]
 
   /**
+   * Get the items in a box, in order, but without enforced grid structure
+   * @param idx
+   * @return
+   */
+  def getBox(idx: Int): Iterable[R] = {
+    val col = idx % (outerDimension / innerDimension)
+    val row = idx / (outerDimension / innerDimension)
+    getBox(col, row).flatten
+  }
+
+  /**
    * Set the value for a given spot
    * @param col
    * @param row

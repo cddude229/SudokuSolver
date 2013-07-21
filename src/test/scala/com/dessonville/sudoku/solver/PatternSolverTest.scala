@@ -42,6 +42,7 @@ class PatternSolverTest extends JUnitSuite {
         PatternSolver.solve(guesser)
 
         assert(guesser.isSolved(), s"Failed to solve $file")
+        assert(guesser.isCorrect(), s"Failed to correctly solve $file")
       }
     }
   }

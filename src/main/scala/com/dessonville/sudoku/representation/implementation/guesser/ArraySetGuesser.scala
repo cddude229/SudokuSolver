@@ -27,4 +27,22 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
     solved = solved || grid.forall(row => row.forall(col => col.isEmpty))
     solved
   }
+  def isCorrect(): Boolean = {
+    var ret = false
+    if(isSolved()){
+      ret = true
+
+      forAllIndices{
+        idx => {
+          ret = ret && completedSet(getRow(idx)) && completedSet(getColumn(idx)) && completedSet(getBox(idx))
+        }
+      }
+    }
+
+    ret
+  }
+
+  private def completedSet(currentItems: Iterable[R]): Boolean = {
+    currentItems.toSet.filter(_ != emptyItem) == allowedItems
+  }
 }

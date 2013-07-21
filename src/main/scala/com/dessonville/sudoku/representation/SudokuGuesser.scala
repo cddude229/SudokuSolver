@@ -87,6 +87,12 @@ trait SudokuGuesser[R] extends Sudoku[R] {
    */
   def isSolved(): Boolean
 
+  /**
+   * Determine if the current sudoku is correct
+   * @return
+   */
+  def isCorrect(): Boolean
+
   override def toString(): String = {
     if(isSolved()){
       super.toString()
