@@ -57,7 +57,10 @@ class PatternSolverTest extends JUnitSuite {
     )
 
     val solvedButWrongFiles = Array(
-      "fail/all-1.txt"
+      "fail/all-1.txt",
+      "fail/one-row-duplication.txt",
+      "fail/one-column-duplication.txt",
+      "fail/one-box-duplication.txt"
     )
 
     runAgainstFiles9x9(unsolvableFiles, solved=false, correct=false)
