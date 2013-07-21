@@ -23,3 +23,22 @@ class ArraySudoku[R] private[implementation] (private val grid: Array[Array[R]],
     grid(row)(col) = value
   }
 }
+
+
+object Array9x9Sudoku {
+  val innerDimension: Int = 3
+  val outerDimension: Int = 9
+  val allowedItems: Set[Int] = Set(1, 2, 3, 4, 5, 6, 7, 8, 9)
+  val emptyItem: Int = 0
+
+  def builder: SudokuBuilder[Int] = new SudokuBuilder[Int]{
+    private var map = Array[Array[Int]]()
+    def addRow(row: Iterable[Int]) {
+      map :+= row.toArray
+    }
+
+    def finish(): Sudoku[Int] = {
+      new ArraySudoku[Int](map, innerDimension, outerDimension, allowedItems, emptyItem)
+    }
+  }
+}
