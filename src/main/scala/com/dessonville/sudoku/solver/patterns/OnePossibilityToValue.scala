@@ -8,13 +8,11 @@ class OnePossibilityToValue[R] extends ReducingPattern[R] {
     var reduction = false
     guesser.forAllCells {
       (col, row) => {
-        if(!guesser.isDetermined(col, row)){
-          val possibilities: Set[R] = guesser.getPossibilities(col, row)
-          if(possibilities.size == 1){
-            val value: R = possibilities.head
-            guesser.setValueAndRemovePossibilities(col, row, value) // Re-setting the value will remove it
-            reduction = true
-          }
+        val possibilities: Set[R] = guesser.getPossibilities(col, row)
+        if(possibilities.size == 1){
+          val value: R = possibilities.head
+          guesser.setValueAndRemovePossibilities(col, row, value) // Re-setting the value will remove it from later rows
+          reduction = true
         }
       }
     }
