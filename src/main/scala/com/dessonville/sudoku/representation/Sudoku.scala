@@ -57,4 +57,35 @@ trait Sudoku[R] {
   final protected def determineMissing(items: Iterable[R]): Set[R] = allowedItems -- items.toSet
   final protected def lowBoxIndex(rowOrCol: Int): Int = rowOrCol * innerDimension
   final protected def highBoxIndex(rowOrCol: Int): Int = lowBoxIndex(rowOrCol + 1) - 1 // Always one less than it
+
+  /**
+   * Gives a cell's coordinates, determine it's containing box's coordinates
+   * @param cellCol
+   * @param cellRow
+   * @return
+   */
+  final protected def getBoxCoords(cellCol: Int, cellRow: Int): (Int, Int) = {
+    (cellCol / innerDimension, cellRow / innerDimension)
+  }
+
+  /**
+   * Lets you iterate from 0 to outerDimension easily
+   * @param func Func to run.  Must take int and return unit
+   */
+  final protected def forAllIndices(func: (Int) => ()) = (0 until outerDimension).foreach(func)
+  final protected def forCellsInRow(row: Int)(func: (Int, Int) => ()) = forAllIndices(func(_, row))
+  final protected def forCellsInColumn(col: Int)(func: (Int, Int) => ()) = forAllIndices(func(col, _))
+  final protected def forCellsInBox(boxCol: Int, boxRow: Int)(func: (Int, Int) => ()) = {
+    def lowToHigh(i: Int) = lowBoxIndex(i) to highBoxIndex(i)
+
+    // TODO: I'm sure there's a more scala way to do this.
+    // Probably some way similar to zip() creating tuples that you can iterate over
+    lowToHigh(boxCol).foreach {
+      col =>
+        lowToHigh(boxRow).foreach {
+          row =>
+            func(col, row)
+        }
+    }
+  }
 }
