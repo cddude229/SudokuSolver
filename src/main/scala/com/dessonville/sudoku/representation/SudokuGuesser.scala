@@ -43,9 +43,33 @@ trait SudokuGuesser[R] extends Sudoku[R] {
    */
   def removePossibility(col: Int, row: Int, value: R) = removePossibilities(col, row, Set(value))
 
+  /**
+   * Remove a possibility from every cell in a row
+   * @param row
+   * @param value
+   */
   def removePossibilityFromRow(row: Int, value: R) = forCellsInRow(row)(removePossibility(_, _, value))
+
+  /**
+   * Remove a possibility from every cell in a column
+   * @param col
+   * @param value
+   */
   def removePossibilityFromCol(col: Int, value: R) = forCellsInColumn(col)(removePossibility(_, _, value))
+
+  /**
+   * Remove a possibility from every cell in a box
+   * @param boxCol
+   * @param boxRow
+   * @param value
+   */
   def removePossibilityFromBox(boxCol: Int, boxRow: Int, value: R): Unit = forCellsInBox(boxCol, boxRow)(removePossibility(_, _, value))
+
+  /**
+   * Removes a possibility from every cell in a box
+   * @param boxCoords Coordinate tuple of (col, row)
+   * @param value
+   */
   def removePossibilityFromBox(boxCoords: (Int, Int), value: R): Unit = removePossibilityFromBox(boxCoords._1, boxCoords._2, value)
 
   /**
