@@ -13,13 +13,15 @@ object Solver extends App {
   val builder: SudokuBuilder[R] = Array9x9Sudoku.builder
 
   builder.addRow(Array(0,2,3,4,5,6,7,8,9))
-  builder.addRow(Array(2,3,4,5,6,7,8,9,1))
-  builder.addRow(Array(3,4,5,6,7,8,9,1,2))
   builder.addRow(Array(4,5,6,7,8,9,1,2,3))
-  builder.addRow(Array(5,6,7,8,9,1,2,3,4))
-  builder.addRow(Array(6,7,8,9,1,2,3,4,5))
   builder.addRow(Array(7,8,9,1,2,3,4,5,6))
+
+  builder.addRow(Array(2,3,4,5,6,7,8,9,1))
+  builder.addRow(Array(5,6,7,8,0,1,2,3,4))
   builder.addRow(Array(8,9,1,2,3,4,5,6,7))
+
+  builder.addRow(Array(3,4,5,6,7,8,9,1,2))
+  builder.addRow(Array(6,7,8,9,1,2,3,4,5))
   builder.addRow(Array(9,1,2,3,4,5,6,7,8))
 
   val sudoku: Sudoku[R] = builder.finish()

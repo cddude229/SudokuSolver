@@ -24,7 +24,7 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
 
   private[this] var solved = false
   def isSolved(): Boolean = {
-    solved = solved && grid.forall(row => row.forall(col => col.isEmpty))
+    solved = solved || grid.forall(row => row.forall(col => col.isEmpty))
     solved
   }
 }
