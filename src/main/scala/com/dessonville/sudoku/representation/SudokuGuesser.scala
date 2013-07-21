@@ -36,11 +36,15 @@ trait SudokuGuesser[R] extends Sudoku[R] {
    */
   def removePossibility(col: Int, row: Int, value: R) = removePossibilities(col, row, Set(value))
 
+  def removePossibilityFromRow(row: Int, value: R) = forCellsInRow(row)(removePossibility(_, _, value))
+  def removePossibilityFromCol(col: Int, value: R) = forCellsInColumn(col)(removePossibility(_, _, value))
+  def removePossibilityFromBox(boxCol: Int, boxRow: Int, value: R) = forCellsInBox(boxCol, boxRow)(removePossibility(_, _, value))
+
   /**
    * Is this cell's value already determined?
    * @param col
    * @param row
    * @return
    */
-  def isDetermined(col: Int, row: Int): Boolean = getPossibilities(col, row).size == 1
+  def isDetermined(col: Int, row: Int): Boolean = getValue(col, row) != emptyItem
 }
