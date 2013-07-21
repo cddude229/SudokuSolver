@@ -1,6 +1,6 @@
 package com.dessonville.sudoku.solver
 
-import com.dessonville.sudoku.solver.patterns.{OnlyValueInRow, OnePossibilityToValue}
+import com.dessonville.sudoku.solver.patterns._
 import com.dessonville.sudoku.representation.{SudokuBuilder, Sudoku, SudokuGuesser}
 import com.dessonville.sudoku.representation.implementation.guesser.ArraySetGuesser
 import com.dessonville.sudoku.representation.implementation.Array9x9Sudoku
@@ -30,7 +30,8 @@ object Solver extends App {
 
   val patterns = Array[ReducingPattern[R]](
     new OnePossibilityToValue[R],
-    new OnlyValueInRow[R]
+    new OnlyValueInRow[R],
+    new OnlyValueInCell[R]
   )
 
   // Iterate over the patterns, reset to first pattern until we're done
