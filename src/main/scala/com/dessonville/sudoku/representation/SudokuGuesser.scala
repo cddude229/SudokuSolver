@@ -85,4 +85,60 @@ trait SudokuGuesser[R] extends Sudoku[R] {
    * @return
    */
   def isSolved(): Boolean
+
+  override def toString(): String = {
+    if(isSolved()){
+      super.toString()
+    } else {
+      def check(set: Set[R], i: Int): String = {
+        if(set.asInstanceOf[Set[Int]].contains(i)){
+          i.toString
+        } else {
+          " "
+        }
+      }
+      var totalSet = ""
+      val squaresList = 0 until 3 // 0 to (outerDimension / innerDimension)
+      val outerList = 0 until outerDimension
+      // Note: This doesn't scale to more than 3 items
+      outerList.foreach {
+        row => {
+          var row1 = List[String]()
+          var row2 = List[String]()
+          var row3 = List[String]()
+          outerList.foreach {
+            col => {
+              val set = getPossibilities(col, row)
+              if(set.size > 1){
+                val one = check(set, 1)
+                val two = check(set, 2)
+                val three = check(set, 3)
+                val four = check(set, 4)
+                val five = check(set, 5)
+                val six = check(set, 6)
+                val seven = check(set, 7)
+                val eight = check(set, 8)
+                val nine = check(set, 9)
+
+                row1 :+= s"$one $two $three"
+                row2 :+= s"$four $five $six"
+                row3 :+= s"$seven $eight $nine"
+              } else {
+                val value = getValue(col, row).toString
+                row1 :+= s"     "
+                row2 :+= s"  $value  "
+                row3 :+= s"     "
+              }
+            }
+          }
+
+          totalSet += row1.mkString("    ") + "\n"
+          totalSet += row2.mkString("    ") + "\n"
+          totalSet += row3.mkString("    ") + "\n\n\n"
+        }
+
+      }
+      totalSet
+    }
+  }
 }
