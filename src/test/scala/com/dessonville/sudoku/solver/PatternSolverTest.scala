@@ -12,11 +12,13 @@ class PatternSolverTest extends JUnitSuite {
 
   @Test def sudoku9x9(){
     val files = Array(
-      "sudoku1.txt",
-      "sudoku2.txt",
-      "sudoku3.txt",
-      "sudoku4.txt",
-      "sudoku5.txt"
+      "easy/sudoku1.txt",
+      "easy/sudoku2.txt",
+      "easy/sudoku3.txt",
+      "easy/sudoku4.txt",
+      "easy/sudoku5.txt",
+      "easy/sudoku6.txt",
+      "easy/sudoku7.txt"
     )
 
     type R = Int
