@@ -9,7 +9,7 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
   wrapped.forAllCells {
     (col, row) => {
       grid(col)(row) = if(isDetermined(col, row)){
-        Set[R]()
+        Set[R](getValue(col, row))
       } else {
         allowedItems
       }
