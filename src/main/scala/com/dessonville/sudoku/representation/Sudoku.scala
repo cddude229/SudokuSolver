@@ -80,20 +80,20 @@ trait Sudoku[R] {
    * Lets you iterate from 0 to outerDimension easily
    * @param func Func to run.  Must take int and return unit
    */
-  final protected def forAllIndices(func: (Int) => ()) = (0 until outerDimension).foreach(func)
-  final protected def forCellsInRow(row: Int)(func: (Int, Int) => ()) = forAllIndices(func(_, row))
-  final protected def forCellsInColumn(col: Int)(func: (Int, Int) => ()) = forAllIndices(func(col, _))
-  final protected def forCellsInBox(boxCol: Int, boxRow: Int)(func: (Int, Int) => ()) = {
+  final protected def forAllIndices(func: Int => Unit) = (0 until outerDimension).foreach(func)
+  final protected def forColAndRowRange(colRange: Iterable[Int], rowRange: Iterable[Int])(func: (Int, Int) => Unit){
+    colRange.foreach {
+      col => rowRange.foreach(func(col, _))
+    }
+  }
+  final def forAllCells(func: (Int, Int) => Unit){
+    forColAndRowRange(0 until outerDimension, 0 until outerDimension)(func)
+  }
+  final def forCellsInRow(row: Int)(func: (Int, Int) => Unit) = forAllIndices(func(_, row))
+  final def forCellsInColumn(col: Int)(func: (Int, Int) => Unit) = forAllIndices(func(col, _))
+  final def forCellsInBox(boxCol: Int, boxRow: Int)(func: (Int, Int) => Unit) = {
     def lowToHigh(i: Int) = lowBoxIndex(i) to highBoxIndex(i)
 
-    // TODO: I'm sure there's a more scala way to do this.
-    // Probably some way similar to zip() creating tuples that you can iterate over
-    lowToHigh(boxCol).foreach {
-      col =>
-        lowToHigh(boxRow).foreach {
-          row =>
-            func(col, row)
-        }
-    }
+    forColAndRowRange(lowToHigh(boxCol), lowToHigh(boxRow))(func)
   }
 }
