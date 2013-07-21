@@ -55,4 +55,10 @@ trait SudokuGuesser[R] extends Sudoku[R] {
    * @return
    */
   def isDetermined(col: Int, row: Int): Boolean = getValue(col, row) != emptyItem
+
+  /**
+   * Determine if the puzzle is solved
+   * @return
+   */
+  def isSolved(): Boolean
 }
