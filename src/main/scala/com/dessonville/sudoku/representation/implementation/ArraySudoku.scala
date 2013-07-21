@@ -22,6 +22,8 @@ class ArraySudoku[R] private[implementation] (private val grid: Array[Array[R]],
   def setValue(col: Int, row: Int, value: R){
     grid(row)(col) = value
   }
+
+  def getValue(col: Int, row: Int): R = grid(row)(col)
 }
 
 

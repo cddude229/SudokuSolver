@@ -49,6 +49,14 @@ trait Sudoku[R] {
    */
   def setValue(col: Int, row: Int, value: R): Unit
 
+  /**
+   * Get the value for a given spot
+   * @param col
+   * @param row
+   * @return
+   */
+  def getValue(col: Int, row: Int): R
+
 
   def getMissingItemsInRow(row: Int) = determineMissing(getRow(row))
   def getMissingItemsInColumn(col: Int) = determineMissing(getColumn(col))
