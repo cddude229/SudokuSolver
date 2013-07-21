@@ -52,11 +52,16 @@ class PatternSolverTest extends JUnitSuite {
   }
 
   @Test def sudoku9x9fail(){
-    val files = Array(
+    val unsolvableFiles = Array(
       "fail/blank.txt"
     )
 
-    runAgainstFiles9x9(files, solved=false, correct=false)
+    val solvedButWrongFiles = Array(
+      "fail/all-1.txt"
+    )
+
+    runAgainstFiles9x9(unsolvableFiles, solved=false, correct=false)
+    runAgainstFiles9x9(solvedButWrongFiles, solved=true, correct=false)
 
   }
 }
