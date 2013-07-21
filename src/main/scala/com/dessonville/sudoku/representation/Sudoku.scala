@@ -80,7 +80,7 @@ trait Sudoku[R] {
    * Lets you iterate from 0 to outerDimension easily
    * @param func Func to run.  Must take int and return unit
    */
-  final protected def forAllIndices(func: Int => Unit) = (0 until outerDimension).foreach(func)
+  final def forAllIndices(func: Int => Unit) = (0 until outerDimension).foreach(func)
   final protected def forColAndRowRange(colRange: Iterable[Int], rowRange: Iterable[Int])(func: (Int, Int) => Unit){
     colRange.foreach {
       col => rowRange.foreach(func(col, _))
