@@ -33,6 +33,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     removePossibilityFromRow(row, value)
     val coords = getBoxCoords(col, row)
     removePossibilityFromBox(coords, value)
+    removePossibilities(col, row, getPossibilities(col, row) - value) // Remove all but current value from this cell
   }
 
   /**
