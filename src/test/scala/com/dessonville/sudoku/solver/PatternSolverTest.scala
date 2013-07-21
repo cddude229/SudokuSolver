@@ -5,29 +5,45 @@ import com.dessonville.sudoku.representation.implementation.Array9x9Sudoku
 import com.dessonville.sudoku.representation.implementation.guesser.ArraySetGuesser
 import org.scalatest.junit.JUnitSuite
 import org.junit.Test
+import java.io.File
 
 class PatternSolverTest extends JUnitSuite {
-  @Test def sudoku1(){
+  val filePath = "./src/test/resources/%s"
+
+  @Test def sudoku9x9(){
+    val files = Array(
+      "sudoku1.txt",
+      "sudoku2.txt",
+      "sudoku3.txt",
+      "sudoku4.txt",
+      "sudoku5.txt"
+    )
+
     type R = Int
-    val builder: SudokuBuilder[R] = Array9x9Sudoku.builder
+    files.foreach {
+      file => {
+        val builder: SudokuBuilder[R] = Array9x9Sudoku.builder
 
-    builder.addRow(Array(3,7,9,0,0,0,0,1,4))
-    builder.addRow(Array(0,6,0,0,1,0,0,7,0))
-    builder.addRow(Array(0,8,0,0,0,9,0,0,5))
-    builder.addRow(Array(4,3,5,0,0,7,0,0,0))
-    builder.addRow(Array(0,9,0,0,4,0,0,2,0))
-    builder.addRow(Array(0,0,0,8,0,0,4,3,6))
-    builder.addRow(Array(9,0,0,7,0,0,0,8,0))
-    builder.addRow(Array(0,4,0,0,8,0,0,5,0))
-    builder.addRow(Array(8,5,0,0,0,0,2,4,9))
+        val theFile = new File(filePath.format(file))
+        assert(theFile.exists, s"Couldn't find file: $file")
 
-    val sudoku: Sudoku[R] = builder.finish()
+        scala.io.Source.fromFile(theFile).getLines().foreach {
+          line => {
+            builder.addRow(line.split("").filter(_.length > 0).map(_.toInt))
+          }
+        }
 
-    val guesser: SudokuGuesser[R] = new ArraySetGuesser[R](sudoku)
+        val sudoku: Sudoku[R] = builder.finish()
 
-    PatternSolver.solve(guesser)
+        val guesser: SudokuGuesser[R] = new ArraySetGuesser[R](sudoku)
 
-    assert(guesser.isSolved())
+        PatternSolver.solve(guesser)
+
+        assert(guesser.isSolved(), s"Failed to solve $file")
+      }
+    }
   }
+
+
 
 }
