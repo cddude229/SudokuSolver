@@ -7,7 +7,7 @@
     <artifactId>sudoku</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
-        <scala.version>2.10.1</scala.version>
+        <scala.version>2.10.2</scala.version>
         <scala.fatalWarnings>-Xfatal-warnings</scala.fatalWarnings>
     </properties>
 
@@ -60,6 +60,12 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
+
+      <dependency>
+        <groupId>org.scalatest</groupId>
+        <artifactId>scalatest_2.10.0</artifactId>
+        <version>1.8</version>
+      </dependency>
 
         <!-- Apache Commons -->
         <dependency>
