@@ -21,12 +21,19 @@ trait SudokuGuesser[R] extends Sudoku[R] {
   def removePossibilities(col: Int, row: Int, values: Set[R]): Unit
 
   /**
-   * Set the values for a cell and automatically removes the value from all items in the row, column, and box
+   * Set the values for a cell and automatically removes the value from all items in the row, column, and box.
+   * Will still remove possibilities if value was already set
    * @param col
    * @param row
    * @param value
    */
-  def setValueAndRemovePossibilities(col: Int, row: Int, value: R): Unit
+  def setValueAndRemovePossibilities(col: Int, row: Int, value: R): Unit = {
+    setValue(col, row, value)
+    removePossibilityFromCol(col, value)
+    removePossibilityFromRow(row, value)
+    val coords = getBoxCoords(col, row)
+    removePossibilityFromBox(coords, value)
+  }
 
   /**
    * Remove a single possibility from a cell
@@ -38,7 +45,8 @@ trait SudokuGuesser[R] extends Sudoku[R] {
 
   def removePossibilityFromRow(row: Int, value: R) = forCellsInRow(row)(removePossibility(_, _, value))
   def removePossibilityFromCol(col: Int, value: R) = forCellsInColumn(col)(removePossibility(_, _, value))
-  def removePossibilityFromBox(boxCol: Int, boxRow: Int, value: R) = forCellsInBox(boxCol, boxRow)(removePossibility(_, _, value))
+  def removePossibilityFromBox(boxCol: Int, boxRow: Int, value: R): Unit = forCellsInBox(boxCol, boxRow)(removePossibility(_, _, value))
+  def removePossibilityFromBox(boxCoords: (Int, Int), value: R): Unit = removePossibilityFromBox(boxCoords._1, boxCoords._2, value)
 
   /**
    * Is this cell's value already determined?
