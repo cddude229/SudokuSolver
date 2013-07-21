@@ -96,4 +96,6 @@ trait Sudoku[R] {
 
     forColAndRowRange(lowToHigh(boxCol), lowToHigh(boxRow))(func)
   }
+
+  override def toString(): String = (0 until outerDimension).map(getRow(_).mkString(",")).mkString("\n")
 }
