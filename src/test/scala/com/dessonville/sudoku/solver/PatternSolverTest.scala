@@ -31,8 +31,13 @@ class PatternSolverTest extends JUnitSuite {
 
         PatternSolver.solve(guesser)
 
+        println(s"$file:")
+        println(guesser.toString())
+        println("\n\n\n")
+
         assert(guesser.isSolved() == solved, s"Checking $file solved: expected $solved but got ${guesser.isSolved()}")
         assert(guesser.isCorrect() == correct, s"Checking $file correctness: expected $correct but got ${guesser.isCorrect()}")
+
       }
     }
   }
@@ -45,7 +50,12 @@ class PatternSolverTest extends JUnitSuite {
       "easy/sudoku4.txt",
       "easy/sudoku5.txt",
       "easy/sudoku6.txt",
-      "easy/sudoku7.txt"
+      "easy/sudoku7.txt",
+
+      "medium/sudoku1.txt",
+      "medium/sudoku2.txt",
+      "medium/sudoku3.txt",
+      "medium/sudoku4.txt"
     )
 
     runAgainstFiles9x9(files, solved=true, correct=true)
