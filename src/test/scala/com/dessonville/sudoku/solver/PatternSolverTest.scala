@@ -55,7 +55,11 @@ class PatternSolverTest extends JUnitSuite {
       "medium/sudoku1.txt",
       "medium/sudoku2.txt",
       "medium/sudoku3.txt",
-      "medium/sudoku4.txt"
+      "medium/sudoku4.txt",
+
+      "hard/sudoku1.txt",
+      "hard/sudoku2.txt",
+      "hard/sudoku3.txt"
     )
 
     runAgainstFiles9x9(files, solved=true, correct=true)
