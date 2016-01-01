@@ -153,9 +153,10 @@ trait SudokuGuesser[Value] extends Sudoku[Value] {
             }
           }
 
-          totalSet += row1.mkString("    ") + "\n"
-          totalSet += row2.mkString("    ") + "\n"
-          totalSet += row3.mkString("    ") + "\n\n\n"
+          val divider = "=====" * 9 + "======" * 8
+          totalSet += row1.mkString("  ||  ") + "\n"
+          totalSet += row2.mkString("  ||  ") + "\n"
+          totalSet += row3.mkString("  ||  ") + s"\n$divider\n"
         }
 
       }
