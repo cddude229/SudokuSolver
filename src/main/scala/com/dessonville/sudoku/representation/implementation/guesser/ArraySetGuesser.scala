@@ -1,6 +1,6 @@
 package com.dessonville.sudoku.representation.implementation.guesser
 
-import com.dessonville.sudoku.representation.{CellCoordinates, Sudoku}
+import com.dessonville.sudoku.representation.Sudoku
 
 class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGuesser[R](wrapped) {
   private[this] val grid: Array[Array[Set[R]]] = Array.ofDim[Set[R]](outerDimension, outerDimension)

@@ -183,4 +183,12 @@ trait Sudoku[Value] {
     val rowIndices = cells.map(_._2).toSet
     (0 until outerDimension).filter(rowIndices.contains).map(getCellsInRow)
   }
+
+  final def coordsToCellCoords(col: Int, row: Int): CellCoordinates = {
+    ColumnRowIndexBasedCoordinates(col, row, innerDimension, outerDimension)
+  }
+
+  final def coordsToCellCoords(coords: (Int, Int)): CellCoordinates = {
+    ColumnRowIndexBasedCoordinates(coords._1, coords._2, innerDimension, outerDimension)
+  }
 }

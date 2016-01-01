@@ -1,6 +1,6 @@
 package com.dessonville.sudoku.solver.patterns
 
-import com.dessonville.sudoku.representation.SudokuGuesser
+import com.dessonville.sudoku.representation.{CellCoordinates, SudokuGuesser}
 import com.dessonville.sudoku.solver.ReducingPattern
 
 /**
@@ -15,18 +15,18 @@ class BoxToColAndRowClearing[R] extends ReducingPattern[R] {
     guesser.mapAllIndices {
       boxIndex =>
         val cellsInBox = guesser.getCellsInBox(boxIndex).toSeq
-        val colsToReduce = guesser.getColumnsContainingCells(cellsInBox: _*)
-        val rowsToReduce = guesser.getRowsContainingCells(cellsInBox: _*)
-        reduction = reduceLines(guesser, cellsInBox, colsToReduce ++ rowsToReduce) || reduction
+        val colsToReduce = guesser.getColumnsContainingCells(cellsInBox: _*).map(_.map(guesser.coordsToCellCoords))
+        val rowsToReduce = guesser.getRowsContainingCells(cellsInBox: _*).map(_.map(guesser.coordsToCellCoords))
+        reduction = reduceLines(guesser, cellsInBox.map(guesser.coordsToCellCoords), colsToReduce ++ rowsToReduce) || reduction
     }
 
     reduction
   }
 
-  private def reduceLines(guesser: SudokuGuesser[R], cellsInBox: Iterable[Coords], linesToReduce: Iterable[Iterable[Coords]]): Boolean = {
-    val cellsContainingValue: Map[R, Set[Coords]] = cellsInBox.flatMap {
+  private def reduceLines(guesser: SudokuGuesser[R], cellsInBox: Iterable[CellCoordinates], linesToReduce: Iterable[Iterable[CellCoordinates]]): Boolean = {
+    val cellsContainingValue: Map[R, Set[CellCoordinates]] = cellsInBox.flatMap {
       cellCoords =>
-        guesser.getPossibleValues(cellCoords._1, cellCoords._2).map {
+        guesser.getPossibleValues(cellCoords).map {
           value => value -> cellCoords
         }
     }.groupBy(_._1).mapValues(_.map(_._2).toSet)
@@ -39,7 +39,7 @@ class BoxToColAndRowClearing[R] extends ReducingPattern[R] {
         val cellsInBoxInLine = cellsInBox.filter(cellsInLine.toSet.contains)
         val cellsInLineNotInBox = cellsInLine.filterNot(cellsInBox.toSet.contains)
 
-        val valuesInLineInBox: Set[R] = cellsInBoxInLine.flatMap(coords => guesser.getPossibleValues(coords._1, coords._2)).toSet
+        val valuesInLineInBox: Set[R] = cellsInBoxInLine.flatMap(coords => guesser.getPossibleValues(coords)).toSet
 
         // If the value in the box-line are only present in that line in the box, then we will remove it from all other cells not in the box-line
         val valuesToRemove = valuesInLineInBox.filter {
@@ -49,7 +49,7 @@ class BoxToColAndRowClearing[R] extends ReducingPattern[R] {
 
         cellsInLineNotInBox.foreach {
           cellCoords =>
-            reduction = guesser.removePossibleValues(cellCoords._1, cellCoords._2, valuesToRemove)
+            reduction = guesser.removePossibleValues(cellCoords, valuesToRemove)
         }
     }
 

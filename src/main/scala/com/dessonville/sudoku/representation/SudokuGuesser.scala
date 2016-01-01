@@ -29,6 +29,16 @@ trait SudokuGuesser[R] extends Sudoku[R] {
   def removePossibleValues(col: Int, row: Int, values: Set[R]): Boolean
 
   /**
+    * Remove a set of possibilities from a cell
+    * @param cellCoordinates
+    * @param values
+    * @return If anything was removed, returns true
+    */
+  def removePossibleValues(cellCoordinates: CellCoordinates, values: Set[R]): Boolean = {
+    removePossibleValues(cellCoordinates.columnIndex, cellCoordinates.rowIndex, values)
+  }
+
+  /**
     * Set the values for a cell and automatically removes the value from all items in the row, column, and box.
     * Will still remove possibilities if value was already set
     * @param col
@@ -123,16 +133,14 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @return
     */
   def solvedScore(): Int = {
-    var score = 0
-
     mapAllCells {
       cellCoordinates =>
         if (getCellValue(cellCoordinates) == emptyCellValue) {
-          score += getPossibleValues(cellCoordinates).size
+          getPossibleValues(cellCoordinates).size
+        } else {
+          0
         }
-    }
-
-    score
+    }.flatten.sum
   }
 
   override def toString(): String = {
