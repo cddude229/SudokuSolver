@@ -139,6 +139,11 @@ trait Sudoku[Value] {
     }
   }
 
+  final def getBoxesContainingCells(cells: CellCoordinates*): Iterable[Iterable[CellCoordinates]] = {
+    val boxIndices = cells.map(_.boxIndex).toSet
+    (0 until outerDimension).filter(boxIndices.contains).map(getCellsInBox)
+  }
+
   final def getColumnsContainingCells(cells: CellCoordinates*): Iterable[Iterable[CellCoordinates]] = {
     val colIndices = cells.map(_.columnIndex).toSet
     (0 until outerDimension).filter(colIndices.contains).map(getCellsInColumn)

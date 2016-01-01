@@ -42,7 +42,7 @@ trait SudokuGuesser[Value] extends Sudoku[Value] {
     * @param cellCoordinates
     * @param value
     */
-  def removePossibleValue(cellCoordinates: CellCoordinates, value: Value): Unit = removePossibleValues(cellCoordinates, Set(value))
+  def removePossibleValue(cellCoordinates: CellCoordinates, value: Value): Boolean = removePossibleValues(cellCoordinates, Set(value))
 
   /**
     * Remove a possibility from every cell in a row

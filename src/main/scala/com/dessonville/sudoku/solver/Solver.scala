@@ -24,7 +24,8 @@ object PatternSolver extends Solver {
       new ReduceCoupletsInColumn[Value](3),
       new ReduceCoupletsInRow[Value](3),
 
-      new BoxToColAndRowClearing[Value]
+      new BoxToColAndRowClearing[Value],
+      new ColAndRowToBoxClearing[Value]
     )
 
     // Iterate over the patterns, reset to first pattern until we're done
