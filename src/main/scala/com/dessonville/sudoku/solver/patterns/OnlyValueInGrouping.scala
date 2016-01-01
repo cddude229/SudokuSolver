@@ -3,6 +3,7 @@ package com.dessonville.sudoku.solver.patterns
 import java.util.concurrent.atomic.AtomicInteger
 
 import com.dessonville.sudoku.representation.SudokuGuesser
+import com.dessonville.sudoku.solver.groupings.{PerBoxHandler, PerColumnHandler, PerRowHandler}
 import com.dessonville.sudoku.solver.{PerGroupingHandler, ReducingPattern}
 
 /**
@@ -57,3 +58,9 @@ abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupin
   }
 
 }
+
+class OnlyValueInBox[R] extends OnlyValueInGrouping[R] with PerBoxHandler[R]
+
+class OnlyValueInColumn[R] extends OnlyValueInGrouping[R] with PerColumnHandler[R]
+
+class OnlyValueInRow[R] extends OnlyValueInGrouping[R] with PerRowHandler[R]
