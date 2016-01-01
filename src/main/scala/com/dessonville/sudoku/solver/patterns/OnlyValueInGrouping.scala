@@ -9,29 +9,29 @@ import com.dessonville.sudoku.solver.ReducingPattern
   * There are groupings (row, column, box) where if a single cell is the only cell that could possibly containing the
   * value, then we should set the value of that cell to that sole possibility.
   */
-abstract class OnlyValueInSet[R] extends ReducingPattern[R] {
-  protected def loadItem(guesser: SudokuGuesser[R], id: Int): Iterable[R]
+abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] {
+  protected def loadGrouping(guesser: SudokuGuesser[R], id: Int): Iterable[R]
 
-  protected def forCellsInItem(guesser: SudokuGuesser[R], id: Int)(func: (Int, Int) => Unit): Unit
+  protected def forCellsInGrouping(guesser: SudokuGuesser[R], id: Int)(func: (Int, Int) => Unit): Unit
 
   def reduce(guesser: SudokuGuesser[R]): Boolean = {
     var reduction = false
 
     guesser.forAllIndices(
-      itemId => {
-        val remaining = guesser.allowedItems -- loadItem(guesser, itemId).toSet
-        val itemMap = Map[R, AtomicInteger](
+      groupingId => {
+        val remaining = guesser.allowedItems -- loadGrouping(guesser, groupingId).toSet
+        val possibilitiesInGroupMap = Map[R, AtomicInteger](
           remaining.map(_ -> new AtomicInteger()).toArray: _*
         )
 
         // TODO: Optimize this to store references and then work based off that instead of counting AtomicInteger
         // Figure out if there's only one occurrence
-        forCellsInItem(guesser, itemId) {
+        forCellsInGrouping(guesser, groupingId) {
           (colIdx, rowIdx) => {
             if (!guesser.isDetermined(colIdx, rowIdx)) {
               guesser.getPossibilities(colIdx, rowIdx).foreach {
                 possibility => {
-                  itemMap.get(possibility).get.incrementAndGet()
+                  possibilitiesInGroupMap.get(possibility).get.incrementAndGet()
                 }
               }
             }
@@ -39,12 +39,12 @@ abstract class OnlyValueInSet[R] extends ReducingPattern[R] {
         }
 
         // Find one occurrences and assign if that's the case
-        val listR = itemMap.toList.filter(_._2.get() == 1).map(_._1)
-        if (listR.nonEmpty) {
+        val listOfSizeOneItems = possibilitiesInGroupMap.toList.filter(_._2.get() == 1).map(_._1)
+        if (listOfSizeOneItems.nonEmpty) {
           reduction = true
-          listR.foreach {
+          listOfSizeOneItems.foreach {
             item => {
-              forCellsInItem(guesser, itemId) {
+              forCellsInGrouping(guesser, groupingId) {
                 (colIdx, rowIdx) => {
                   if (guesser.getPossibilities(colIdx, rowIdx).contains(item)) {
                     guesser.setValueAndRemovePossibilities(colIdx, rowIdx, item)
