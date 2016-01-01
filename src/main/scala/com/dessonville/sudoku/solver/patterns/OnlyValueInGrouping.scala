@@ -26,7 +26,7 @@ abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupin
         forCellsInGrouping(guesser, groupingId) {
           (colIdx, rowIdx) => {
             if (!guesser.isDetermined(colIdx, rowIdx)) {
-              guesser.getPossibilities(colIdx, rowIdx).foreach {
+              guesser.getPossibleValues(colIdx, rowIdx).foreach {
                 possibility => {
                   possibilitiesInGroupMap.get(possibility).get.incrementAndGet()
                 }
@@ -43,8 +43,8 @@ abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupin
             item => {
               forCellsInGrouping(guesser, groupingId) {
                 (colIdx, rowIdx) => {
-                  if (guesser.getPossibilities(colIdx, rowIdx).contains(item)) {
-                    guesser.setValueAndRemovePossibilities(colIdx, rowIdx, item)
+                  if (guesser.getPossibleValues(colIdx, rowIdx).contains(item)) {
+                    guesser.setValueAndRemovePossibleValue(colIdx, rowIdx, item)
                   }
                 }
               }

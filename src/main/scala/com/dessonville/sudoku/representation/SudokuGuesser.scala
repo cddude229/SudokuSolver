@@ -10,7 +10,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param row
     * @return
     */
-  def getPossibilities(col: Int, row: Int): Set[R]
+  def getPossibleValues(col: Int, row: Int): Set[R]
 
   /**
     * Remove a set of possibilities from a cell
@@ -19,7 +19,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param values
     * @return If anything was removed, returns true
     */
-  def removePossibilities(col: Int, row: Int, values: Set[R]): Boolean
+  def removePossibleValues(col: Int, row: Int, values: Set[R]): Boolean
 
   /**
     * Set the values for a cell and automatically removes the value from all items in the row, column, and box.
@@ -28,13 +28,13 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param row
     * @param value
     */
-  def setValueAndRemovePossibilities(col: Int, row: Int, value: R): Unit = {
+  def setValueAndRemovePossibleValue(col: Int, row: Int, value: R): Unit = {
     setCellValue(col, row, value)
-    removePossibilityFromCol(col, value)
-    removePossibilityFromRow(row, value)
+    removePossibleValueFromColumn(col, value)
+    removePossibleValueFromRow(row, value)
     val coords = boxCoordsContainingCell(col, row)
-    removePossibilityFromBox(coords, value)
-    removePossibilities(col, row, getPossibilities(col, row) - value) // Remove all but current value from this cell
+    removePossibleValueFromBox(coords, value)
+    removePossibleValues(col, row, getPossibleValues(col, row) - value) // Remove all but current value from this cell
   }
 
   /**
@@ -43,21 +43,21 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param row
     * @param value
     */
-  def removePossibility(col: Int, row: Int, value: R) = removePossibilities(col, row, Set(value))
+  def removePossibileValue(col: Int, row: Int, value: R) = removePossibleValues(col, row, Set(value))
 
   /**
     * Remove a possibility from every cell in a row
     * @param row
     * @param value
     */
-  def removePossibilityFromRow(row: Int, value: R) = forCellsInRow(row)(removePossibility(_, _, value))
+  def removePossibleValueFromRow(row: Int, value: R) = forCellsInRow(row)(removePossibileValue(_, _, value))
 
   /**
     * Remove a possibility from every cell in a column
     * @param col
     * @param value
     */
-  def removePossibilityFromCol(col: Int, value: R) = forCellsInColumn(col)(removePossibility(_, _, value))
+  def removePossibleValueFromColumn(col: Int, value: R) = forCellsInColumn(col)(removePossibileValue(_, _, value))
 
   /**
     * Remove a possibility from every cell in a box
@@ -65,14 +65,14 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param boxRow
     * @param value
     */
-  def removePossibilityFromBox(boxCol: Int, boxRow: Int, value: R): Unit = forCellsInBox(boxCol, boxRow)(removePossibility(_, _, value))
+  def removePossibleValueFromBox(boxCol: Int, boxRow: Int, value: R): Unit = forCellsInBox(boxCol, boxRow)(removePossibileValue(_, _, value))
 
   /**
     * Removes a possibility from every cell in a box
     * @param boxCoords Coordinate tuple of (col, row)
     * @param value
     */
-  def removePossibilityFromBox(boxCoords: (Int, Int), value: R): Unit = removePossibilityFromBox(boxCoords._1, boxCoords._2, value)
+  def removePossibleValueFromBox(boxCoords: (Int, Int), value: R): Unit = removePossibleValueFromBox(boxCoords._1, boxCoords._2, value)
 
   /**
     * Is this cell's value already determined?
@@ -104,7 +104,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     forAllCells {
       case (colIdx, rowIdx) =>
         if (getCellValue(colIdx, rowIdx) == emptyCellValue) {
-          score += getPossibilities(colIdx, rowIdx).size
+          score += getPossibleValues(colIdx, rowIdx).size
         }
     }
 
@@ -133,7 +133,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
           var row3 = List[String]()
           outerList.foreach {
             col => {
-              val set = getPossibilities(col, row)
+              val set = getPossibleValues(col, row)
               if (set.size > 1) {
                 val one = check(set, 1)
                 val two = check(set, 2)

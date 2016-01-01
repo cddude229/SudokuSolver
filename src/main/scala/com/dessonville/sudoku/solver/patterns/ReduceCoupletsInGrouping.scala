@@ -28,7 +28,7 @@ abstract class ReduceCoupletsInGrouping[R](N: Int) extends ReducingPattern[R] wi
         forCellsInGrouping(guesser, groupingId) {
           (colIdx, rowIdx) => {
             if (!guesser.isDetermined(colIdx, rowIdx)) {
-              val totalPossibilities = guesser.getPossibilities(colIdx, rowIdx)
+              val totalPossibilities = guesser.getPossibleValues(colIdx, rowIdx)
               if (totalPossibilities.size == N) {
                 possibilitiesInGroupMap.getOrElseUpdate(totalPossibilities, new AtomicInteger()).incrementAndGet()
               }
@@ -43,8 +43,8 @@ abstract class ReduceCoupletsInGrouping[R](N: Int) extends ReducingPattern[R] wi
             possibilitiesSet => {
               forCellsInGrouping(guesser, groupingId) {
                 (colIdx, rowIdx) => {
-                  if (guesser.getPossibilities(colIdx, rowIdx) != possibilitiesSet) {
-                    reduction = guesser.removePossibilities(colIdx, rowIdx, possibilitiesSet) || reduction
+                  if (guesser.getPossibleValues(colIdx, rowIdx) != possibilitiesSet) {
+                    reduction = guesser.removePossibleValues(colIdx, rowIdx, possibilitiesSet) || reduction
                   }
                 }
               }

@@ -26,7 +26,7 @@ class BoxToColAndRowClearing[R] extends ReducingPattern[R] {
   private def reduceLines(guesser: SudokuGuesser[R], cellsInBox: Seq[Coords], linesToReduce: Seq[Seq[Coords]]): Boolean = {
     val cellsContainingValue: Map[R, Set[Coords]] = cellsInBox.flatMap {
       cellCoords =>
-        guesser.getPossibilities(cellCoords._1, cellCoords._2).map {
+        guesser.getPossibleValues(cellCoords._1, cellCoords._2).map {
           value => value -> cellCoords
         }
     }.groupBy(_._1).mapValues(_.map(_._2).toSet)
@@ -38,7 +38,7 @@ class BoxToColAndRowClearing[R] extends ReducingPattern[R] {
         val cellsInBoxInLine = cellsInBox.filter(cellsInLine.contains)
         val cellsInLineNotInBox = cellsInLine.filterNot(cellsInBox.contains)
 
-        val valuesInLineInBox: Set[R] = cellsInBoxInLine.flatMap(coords => guesser.getPossibilities(coords._1, coords._2)).toSet
+        val valuesInLineInBox: Set[R] = cellsInBoxInLine.flatMap(coords => guesser.getPossibleValues(coords._1, coords._2)).toSet
 
         // If the value in the box-line are only present in that line in the box, then we will remove it from all other cells not in the box-line
         val valuesToRemove = valuesInLineInBox.filter {
@@ -48,7 +48,7 @@ class BoxToColAndRowClearing[R] extends ReducingPattern[R] {
 
         cellsInLineNotInBox.foreach {
           cellCoords =>
-            reduction = guesser.removePossibilities(cellCoords._1, cellCoords._2, valuesToRemove)
+            reduction = guesser.removePossibleValues(cellCoords._1, cellCoords._2, valuesToRemove)
         }
     }
 
