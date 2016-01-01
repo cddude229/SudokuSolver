@@ -9,29 +9,22 @@ import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.matchers.Matchers
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
 @RunWith(classOf[JUnitRunner])
 class PatternSolverTest extends WordSpec with Matchers {
   val filePath = "./src/test/resources/%s"
 
-  val solvableFiles = Array(
-    "easy/sudoku1.txt",
-    "easy/sudoku2.txt",
-    "easy/sudoku3.txt",
-    "easy/sudoku4.txt",
-    "easy/sudoku5.txt",
-    "easy/sudoku6.txt",
-    "easy/sudoku7.txt",
-
-    "medium/sudoku1.txt",
-    "medium/sudoku2.txt",
-    "medium/sudoku3.txt",
-    "medium/sudoku4.txt",
-
-    "hard/sudoku1.txt",
-    "hard/sudoku2.txt",
-    "hard/sudoku3.txt"
+  val solvableFileFolders = Array (
+    "easy", "medium", "hard"
   )
+
+  val solvableFiles: Array[String] = solvableFileFolders.flatMap {
+    fileFolder =>
+      new PathMatchingResourcePatternResolver().getResources(s"$fileFolder/*.txt").map {
+        resource => s"$fileFolder/${resource.getFilename}"
+      }
+  }
 
   val unsolvableFiles = Array(
     "fail/blank.txt"
