@@ -25,7 +25,7 @@ abstract class ReduceCoupletsInGrouping[Value](N: Int) extends ReducingPattern[V
         val possibilitiesInGroupMap = mutable.Map[Set[Value], AtomicInteger]()
 
         // Iterate over each cell, and record the recordings of those items.
-        forCellsInGrouping(guesser, groupingId) {
+        cellsInGrouping(guesser, groupingId).foreach {
           cellCoordinates => {
             if (!guesser.isDetermined(cellCoordinates)) {
               val totalPossibilities = guesser.getPossibleValues(cellCoordinates)
@@ -41,7 +41,7 @@ abstract class ReduceCoupletsInGrouping[Value](N: Int) extends ReducingPattern[V
         if (listOfSizeNItems.nonEmpty) {
           listOfSizeNItems.foreach {
             possibilitiesSet => {
-              forCellsInGrouping(guesser, groupingId) {
+              cellsInGrouping(guesser, groupingId).foreach {
                 cellCoordinates => {
                   if (guesser.getPossibleValues(cellCoordinates) != possibilitiesSet) {
                     reduction = guesser.removePossibleValues(cellCoordinates, possibilitiesSet) || reduction

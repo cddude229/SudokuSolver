@@ -152,8 +152,4 @@ trait Sudoku[Value] {
   final def coordsToCellCoords(col: Int, row: Int): CellCoordinates = {
     ColumnRowIndexBasedCoordinates(col, row, innerDimension, outerDimension)
   }
-
-  final def coordsToCellCoords(coords: (Int, Int)): CellCoordinates = {
-    ColumnRowIndexBasedCoordinates(coords._1, coords._2, innerDimension, outerDimension)
-  }
 }

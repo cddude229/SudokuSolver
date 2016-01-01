@@ -23,7 +23,7 @@ abstract class OnlyValueInGrouping[Value] extends ReducingPattern[Value] with Pe
 
         // TODO: Optimize this to store references and then work based off that instead of counting AtomicInteger
         // Figure out if there's only one occurrence
-        forCellsInGrouping(guesser, groupingId) {
+        cellsInGrouping(guesser, groupingId).foreach {
           cellCoordinates => {
             if (!guesser.isDetermined(cellCoordinates)) {
               guesser.getPossibleValues(cellCoordinates).foreach {
@@ -41,7 +41,7 @@ abstract class OnlyValueInGrouping[Value] extends ReducingPattern[Value] with Pe
           reduction = true
           listOfSizeOneItems.foreach {
             item => {
-              forCellsInGrouping(guesser, groupingId) {
+              cellsInGrouping(guesser, groupingId).foreach {
                 cellCoordinates => {
                   if (guesser.getPossibleValues(cellCoordinates).contains(item)) {
                     guesser.setValueAndRemovePossibleValue(cellCoordinates, item)

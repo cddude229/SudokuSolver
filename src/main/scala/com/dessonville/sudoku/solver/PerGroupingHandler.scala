@@ -15,6 +15,6 @@ trait PerGroupingHandler[Value] {
   /**
     * Apply a function to each cell in a grouping
     */
-  protected def forCellsInGrouping(guesser: SudokuGuesser[Value], id: Int)(func: CellCoordinates => Unit): Unit
+  protected def cellsInGrouping(guesser: SudokuGuesser[Value], id: Int): Iterable[CellCoordinates]
 
 }
