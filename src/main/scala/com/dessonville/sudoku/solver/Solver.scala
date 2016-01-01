@@ -12,7 +12,7 @@ object PatternSolver extends Solver {
     val patterns = Array[ReducingPattern[R]](
       new OnePossibilityToValue[R],
       new OnlyValueInRow[R],
-      new OnlyValueInCell[R],
+      new OnlyValueInColumn[R],
       new OnlyValueInBox[R]
     )
 
