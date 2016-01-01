@@ -10,7 +10,7 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
     cellCoordinates => {
       val col = cellCoordinates.columnIndex
       val row = cellCoordinates.rowIndex
-      grid(col)(row) = if (isDetermined(col, row)) {
+      grid(col)(row) = if (isDetermined(cellCoordinates)) {
         Set[R](getCellValue(col, row))
       } else {
         allowedCellValues

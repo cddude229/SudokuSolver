@@ -29,7 +29,7 @@ abstract class ReduceCoupletsInGrouping[R](N: Int) extends ReducingPattern[R] wi
           cellCoordinates => {
             val colIdx = cellCoordinates.columnIndex
             val rowIdx = cellCoordinates.rowIndex
-            if (!guesser.isDetermined(colIdx, rowIdx)) {
+            if (!guesser.isDetermined(cellCoordinates)) {
               val totalPossibilities = guesser.getPossibleValues(colIdx, rowIdx)
               if (totalPossibilities.size == N) {
                 possibilitiesInGroupMap.getOrElseUpdate(totalPossibilities, new AtomicInteger()).incrementAndGet()

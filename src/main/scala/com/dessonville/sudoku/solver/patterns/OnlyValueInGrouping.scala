@@ -27,7 +27,7 @@ abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupin
           cellCoordinates => {
             val colIdx = cellCoordinates.columnIndex
             val rowIdx = cellCoordinates.rowIndex
-            if (!guesser.isDetermined(colIdx, rowIdx)) {
+            if (!guesser.isDetermined(cellCoordinates)) {
               guesser.getPossibleValues(colIdx, rowIdx).foreach {
                 possibility => {
                   possibilitiesInGroupMap.get(possibility).get.incrementAndGet()

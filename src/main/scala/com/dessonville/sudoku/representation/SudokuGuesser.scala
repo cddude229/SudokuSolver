@@ -110,11 +110,10 @@ trait SudokuGuesser[R] extends Sudoku[R] {
 
   /**
     * Is this cell's value already determined?
-    * @param col
-    * @param row
+    * @param cellCoordinates
     * @return
     */
-  def isDetermined(col: Int, row: Int): Boolean = getCellValue(col, row) != emptyCellValue
+  def isDetermined(cellCoordinates: CellCoordinates): Boolean = getCellValue(cellCoordinates) != emptyCellValue
 
   /**
     * Determine if the puzzle is solved
