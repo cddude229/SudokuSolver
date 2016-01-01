@@ -96,10 +96,10 @@ trait Sudoku[Value] {
     */
   final def getAllIndices: Iterable[Int] = 0 until outerDimension
 
-  final protected def mapColumnAndRowRange[T](columnRange: Iterable[Int], rowRange: Iterable[Int])(func: CellCoordinates => T): Iterable[Iterable[T]] = {
+  final protected def getColumnAndRowRange(columnRange: Iterable[Int], rowRange: Iterable[Int]): Iterable[Iterable[CellCoordinates]] = {
     columnRange.map {
       col => rowRange.map {
-        row => func(ColumnRowIndexBasedCoordinates(col, row, innerDimension, outerDimension))
+        row => ColumnRowIndexBasedCoordinates(col, row, innerDimension, outerDimension)
       }
     }
   }
@@ -113,13 +113,13 @@ trait Sudoku[Value] {
   }
 
   final def getAllCells: Iterable[Iterable[CellCoordinates]] = {
-    mapColumnAndRowRange(0 until outerDimension, 0 until outerDimension)(cellCoordinates => cellCoordinates)
+    getColumnAndRowRange(0 until outerDimension, 0 until outerDimension)
   }
 
   final def getCellsInBox(boxCol: Int, boxRow: Int): Iterable[CellCoordinates] = {
     def lowToHigh(i: Int) = lowerBoxIndex(i) to higherBoxIndex(i)
 
-    mapColumnAndRowRange(lowToHigh(boxCol), lowToHigh(boxRow))(cellCoordinates => cellCoordinates).flatten
+    getColumnAndRowRange(lowToHigh(boxCol), lowToHigh(boxRow)).flatten
   }
 
   final def getCellsInBox(boxIdx: Int): Iterable[CellCoordinates] = {
