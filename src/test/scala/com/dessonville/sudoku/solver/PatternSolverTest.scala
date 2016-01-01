@@ -5,81 +5,92 @@ import java.io.File
 import com.dessonville.sudoku.representation.implementation.Array9x9Sudoku
 import com.dessonville.sudoku.representation.implementation.guesser.ArraySetGuesser
 import com.dessonville.sudoku.representation.{Sudoku, SudokuBuilder, SudokuGuesser}
-import org.junit.Test
-import org.scalatest.junit.JUnitSuite
+import org.junit.runner.RunWith
+import org.scalatest.WordSpec
+import org.scalatest.junit.JUnitRunner
+import org.scalatest.matchers.Matchers
 
-class PatternSolverTest extends JUnitSuite {
+@RunWith(classOf[JUnitRunner])
+class PatternSolverTest extends WordSpec with Matchers {
   val filePath = "./src/test/resources/%s"
 
-  private def runAgainstFiles9x9(files: Array[String], solved: Boolean, correct: Boolean) {
-    type R = Int
+  val solvableFiles = Array(
+    "easy/sudoku1.txt",
+    "easy/sudoku2.txt",
+    "easy/sudoku3.txt",
+    "easy/sudoku4.txt",
+    "easy/sudoku5.txt",
+    "easy/sudoku6.txt",
+    "easy/sudoku7.txt",
 
-    files.foreach {
-      file => {
-        val theFile = new File(filePath.format(file))
-        assert(theFile.exists, s"Couldn't find file: $file")
+    "medium/sudoku1.txt",
+    "medium/sudoku2.txt",
+    "medium/sudoku3.txt",
+    "medium/sudoku4.txt",
 
-        val builder: SudokuBuilder[R] = Array9x9Sudoku.builder
+    "hard/sudoku1.txt",
+    "hard/sudoku2.txt",
+    "hard/sudoku3.txt"
+  )
 
-        scala.io.Source.fromFile(theFile).getLines().foreach {
-          line => {
-            builder.addRow(line.split("").filter(_.length > 0).map(_.toInt))
-          }
+  val unsolvableFiles = Array(
+    "fail/blank.txt"
+  )
+
+  val solvableButWrongFiles = Array(
+    "fail/all-1.txt",
+    "fail/one-row-duplication.txt",
+    "fail/one-column-duplication.txt",
+    "fail/one-box-duplication.txt"
+  )
+
+  "PatternSolver" should {
+    solvableFiles.foreach {
+      solvableFile =>
+        s"successfully solve $solvableFile" in {
+          runAgainstFile9x9(solvableFile, solved = true, correct = true)
         }
+    }
 
-        val sudoku: Sudoku[R] = builder.finish()
-        val guesser: SudokuGuesser[R] = new ArraySetGuesser[R](sudoku)
+    unsolvableFiles.foreach {
+      unsolvableFile =>
+        s"fail to solve $unsolvableFile" in {
+          runAgainstFile9x9(unsolvableFile, solved = false, correct = false)
+        }
+    }
 
-        PatternSolver.solve(guesser)
-
-        println(s"$file:")
-        println(guesser.toString())
-        println("\n\n\n")
-
-        assert(guesser.isSolved() == solved, s"Checking $file solved: expected $solved but got ${guesser.isSolved()}")
-        assert(guesser.isCorrect() == correct, s"Checking $file correctness: expected $correct but got ${guesser.isCorrect()}")
-
-      }
+    solvableButWrongFiles.foreach {
+      solvableButWrongFile =>
+        s"solve, but not produce correct results of $solvableButWrongFile" in {
+          runAgainstFile9x9(solvableButWrongFile, solved = true, correct = false)
+        }
     }
   }
 
-  @Test def sudoku9x9success() {
-    val files = Array(
-      "easy/sudoku1.txt",
-      "easy/sudoku2.txt",
-      "easy/sudoku3.txt",
-      "easy/sudoku4.txt",
-      "easy/sudoku5.txt",
-      "easy/sudoku6.txt",
-      "easy/sudoku7.txt",
+  private def runAgainstFile9x9(file: String, solved: Boolean, correct: Boolean) {
+    type R = Int
 
-      "medium/sudoku1.txt",
-      "medium/sudoku2.txt",
-      "medium/sudoku3.txt",
-      "medium/sudoku4.txt",
+    val theFile = new File(filePath.format(file))
+    assert(theFile.exists, s"Couldn't find file: $file")
 
-      "hard/sudoku1.txt",
-      "hard/sudoku2.txt",
-      "hard/sudoku3.txt"
-    )
+    val builder: SudokuBuilder[R] = Array9x9Sudoku.builder
 
-    runAgainstFiles9x9(files, solved = true, correct = true)
-  }
+    scala.io.Source.fromFile(theFile).getLines().foreach {
+      line => {
+        builder.addRow(line.split("").filter(_.length > 0).map(_.toInt))
+      }
+    }
 
-  @Test def sudoku9x9fail() {
-    val unsolvableFiles = Array(
-      "fail/blank.txt"
-    )
+    val sudoku: Sudoku[R] = builder.finish()
+    val guesser: SudokuGuesser[R] = new ArraySetGuesser[R](sudoku)
 
-    val solvedButWrongFiles = Array(
-      "fail/all-1.txt",
-      "fail/one-row-duplication.txt",
-      "fail/one-column-duplication.txt",
-      "fail/one-box-duplication.txt"
-    )
+    PatternSolver.solve(guesser)
 
-    runAgainstFiles9x9(unsolvableFiles, solved = false, correct = false)
-    runAgainstFiles9x9(solvedButWrongFiles, solved = true, correct = false)
+    println(s"$file:")
+    println(guesser.toString())
+    println("\n\n\n")
 
+    assert(guesser.isSolved() == solved, s"Checking $file solved: expected $solved but got ${guesser.isSolved()}")
+    assert(guesser.isCorrect() == correct, s"Checking $file correctness: expected $correct but got ${guesser.isCorrect()}")
   }
 }
