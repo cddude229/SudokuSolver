@@ -97,7 +97,7 @@ trait SudokuGuesser[Value] extends Sudoku[Value] {
     * @return
     */
   def solvedScore(): Int = {
-    mapAllCells {
+    getAllCells.flatten.map {
       cellCoordinates =>
         if (getCellValue(cellCoordinates) == emptyCellValue) {
           getPossibleValues(cellCoordinates).size

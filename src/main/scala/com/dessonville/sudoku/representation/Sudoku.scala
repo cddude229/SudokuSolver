@@ -104,16 +104,16 @@ trait Sudoku[Value] {
     }
   }
 
-  final def mapAllCells[T](func: CellCoordinates => T): Iterable[Iterable[T]] = {
-    mapColumnAndRowRange(0 until outerDimension, 0 until outerDimension)(func)
-  }
-
   override def toString(): String = (0 until outerDimension).map(getValuesInRow(_).mkString(",")).mkString("\n")
 
   private def getBoxCoordsFromBoxIndex(index: Int): (Int, Int) = {
     val col = index % (outerDimension / innerDimension)
     val row = index / (outerDimension / innerDimension)
     (col, row)
+  }
+
+  final def getAllCells: Iterable[Iterable[CellCoordinates]] = {
+    mapColumnAndRowRange(0 until outerDimension, 0 until outerDimension)(cellCoordinates => cellCoordinates)
   }
 
   final def getCellsInBox(boxCol: Int, boxRow: Int): Iterable[CellCoordinates] = {

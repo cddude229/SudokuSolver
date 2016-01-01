@@ -6,7 +6,7 @@ class ArraySetGuesser[Value](private val wrapped: Sudoku[Value]) extends Wrapped
   private[this] val grid: Array[Array[Set[Value]]] = Array.ofDim[Set[Value]](outerDimension, outerDimension)
 
   // Populate all items by default
-  wrapped.mapAllCells {
+  wrapped.getAllCells.flatten.foreach {
     cellCoordinates => {
       val col = cellCoordinates.columnIndex
       val row = cellCoordinates.rowIndex

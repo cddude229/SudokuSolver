@@ -9,7 +9,7 @@ import com.dessonville.sudoku.solver.ReducingPattern
 class OnePossibilityToValue[Value] extends ReducingPattern[Value] {
   def reduce(guesser: SudokuGuesser[Value]): Boolean = {
     var reduction = false
-    guesser.mapAllCells {
+    guesser.getAllCells.flatten.foreach {
       cellCoordinates => {
         val possibilities: Set[Value] = guesser.getPossibleValues(cellCoordinates)
         if (possibilities.size == 1) {
