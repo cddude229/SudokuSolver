@@ -1,16 +1,17 @@
 package com.dessonville.sudoku.solver
 
-import com.dessonville.sudoku.representation.{SudokuGuesser, Sudoku, SudokuBuilder}
+import java.io.File
+
 import com.dessonville.sudoku.representation.implementation.Array9x9Sudoku
 import com.dessonville.sudoku.representation.implementation.guesser.ArraySetGuesser
-import org.scalatest.junit.JUnitSuite
+import com.dessonville.sudoku.representation.{Sudoku, SudokuBuilder, SudokuGuesser}
 import org.junit.Test
-import java.io.File
+import org.scalatest.junit.JUnitSuite
 
 class PatternSolverTest extends JUnitSuite {
   val filePath = "./src/test/resources/%s"
 
-  private def runAgainstFiles9x9(files: Array[String], solved: Boolean, correct: Boolean){
+  private def runAgainstFiles9x9(files: Array[String], solved: Boolean, correct: Boolean) {
     type R = Int
 
     files.foreach {
@@ -42,7 +43,7 @@ class PatternSolverTest extends JUnitSuite {
     }
   }
 
-  @Test def sudoku9x9success(){
+  @Test def sudoku9x9success() {
     val files = Array(
       "easy/sudoku1.txt",
       "easy/sudoku2.txt",
@@ -62,10 +63,10 @@ class PatternSolverTest extends JUnitSuite {
       "hard/sudoku3.txt"
     )
 
-    runAgainstFiles9x9(files, solved=true, correct=true)
+    runAgainstFiles9x9(files, solved = true, correct = true)
   }
 
-  @Test def sudoku9x9fail(){
+  @Test def sudoku9x9fail() {
     val unsolvableFiles = Array(
       "fail/blank.txt"
     )
@@ -77,8 +78,8 @@ class PatternSolverTest extends JUnitSuite {
       "fail/one-box-duplication.txt"
     )
 
-    runAgainstFiles9x9(unsolvableFiles, solved=false, correct=false)
-    runAgainstFiles9x9(solvedButWrongFiles, solved=true, correct=false)
+    runAgainstFiles9x9(unsolvableFiles, solved = false, correct = false)
+    runAgainstFiles9x9(solvedButWrongFiles, solved = true, correct = false)
 
   }
 }

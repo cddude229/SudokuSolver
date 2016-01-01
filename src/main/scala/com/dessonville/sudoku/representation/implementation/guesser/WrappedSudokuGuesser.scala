@@ -17,7 +17,7 @@ abstract class WrappedSudokuGuesser[R](private val wrapped: Sudoku[R]) extends S
 
   def getBox(col: Int, row: Int): Iterable[Iterable[R]] = wrapped.getBox(col, row)
 
-  def setValue(col: Int, row: Int, value: R)  = wrapped.setValue(col, row, value)
+  def setValue(col: Int, row: Int, value: R) = wrapped.setValue(col, row, value)
 
   def getValue(col: Int, row: Int): R = wrapped.getValue(col, row)
 }

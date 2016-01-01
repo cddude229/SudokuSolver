@@ -8,7 +8,7 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
   // Populate all items by default
   wrapped.forAllCells {
     (col, row) => {
-      grid(col)(row) = if(isDetermined(col, row)){
+      grid(col)(row) = if (isDetermined(col, row)) {
         Set[R](getValue(col, row))
       } else {
         allowedItems
@@ -18,21 +18,23 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
 
   def getPossibilities(col: Int, row: Int): Set[R] = grid(col)(row)
 
-  def removePossibilities(col: Int, row: Int, values: Set[R]){
+  def removePossibilities(col: Int, row: Int, values: Set[R]) {
     grid(col)(row) = grid(col)(row) -- values
   }
 
   private[this] var solved = false
+
   def isSolved(): Boolean = {
     solved = solved || grid.forall(row => row.forall(col => col.isEmpty))
     solved
   }
+
   def isCorrect(): Boolean = {
     var ret = false
-    if(isSolved()){
+    if (isSolved()) {
       ret = true
 
-      forAllIndices{
+      forAllIndices {
         idx => {
           ret = ret && completedSet(getRow(idx)) && completedSet(getColumn(idx)) && completedSet(getBox(idx))
         }
