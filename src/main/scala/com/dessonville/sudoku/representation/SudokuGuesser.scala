@@ -17,8 +17,9 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param col
     * @param row
     * @param values
+    * @return If anything was removed, returns true
     */
-  def removePossibilities(col: Int, row: Int, values: Set[R]): Unit
+  def removePossibilities(col: Int, row: Int, values: Set[R]): Boolean
 
   /**
     * Set the values for a cell and automatically removes the value from all items in the row, column, and box.

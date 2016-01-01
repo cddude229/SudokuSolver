@@ -13,7 +13,13 @@ object PatternSolver extends Solver {
       new OnePossibilityToValue[R],
       new OnlyValueInRow[R],
       new OnlyValueInColumn[R],
-      new OnlyValueInBox[R]
+      new OnlyValueInBox[R],
+      new ReduceCoupletsInBox[R](2),
+      new ReduceCoupletsInColumn[R](2),
+      new ReduceCoupletsInRow[R](2),
+      new ReduceCoupletsInBox[R](3),
+      new ReduceCoupletsInColumn[R](3),
+      new ReduceCoupletsInRow[R](3)
     )
 
     // Iterate over the patterns, reset to first pattern until we're done

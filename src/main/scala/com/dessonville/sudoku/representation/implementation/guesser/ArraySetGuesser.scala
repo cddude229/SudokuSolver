@@ -18,8 +18,10 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
 
   def getPossibilities(col: Int, row: Int): Set[R] = grid(col)(row)
 
-  def removePossibilities(col: Int, row: Int, values: Set[R]) {
+  def removePossibilities(col: Int, row: Int, values: Set[R]): Boolean = {
+    val original = grid(col)(row)
     grid(col)(row) = grid(col)(row) -- values
+    grid(col)(row) != original
   }
 
   private[this] var solved = false
