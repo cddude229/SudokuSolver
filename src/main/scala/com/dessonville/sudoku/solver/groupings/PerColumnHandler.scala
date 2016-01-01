@@ -8,7 +8,7 @@ trait PerColumnHandler[R] extends PerGroupingHandler[R] {
   override protected def loadUsedItemsInGrouping(guesser: SudokuGuesser[R], id: Int): Iterable[R] = guesser.getValuesInColumn(id)
 
   override protected def forCellsInGrouping(guesser: SudokuGuesser[R], id: Int)(func: (Int, Int) => Unit): Unit = {
-    guesser.forCellsInColumn(id)(func)
+    guesser.mapCellsInColumn(id)(func)
   }
 
 }

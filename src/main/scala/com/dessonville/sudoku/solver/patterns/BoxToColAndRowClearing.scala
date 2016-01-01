@@ -12,7 +12,7 @@ class BoxToColAndRowClearing[R] extends ReducingPattern[R] {
   override def reduce(guesser: SudokuGuesser[R]): Boolean = {
     var reduction = false
 
-    guesser.forAllIndices {
+    guesser.mapAllIndices {
       boxIndex =>
         val cellsInBox = guesser.getCellsInBox(boxIndex)
         val colsToReduce: Seq[Seq[Coords]] = guesser.getColumnsContainingCells(cellsInBox: _*)

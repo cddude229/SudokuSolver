@@ -50,14 +50,14 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param row
     * @param value
     */
-  def removePossibleValueFromRow(row: Int, value: R) = forCellsInRow(row)(removePossibileValue(_, _, value))
+  def removePossibleValueFromRow(row: Int, value: R) = mapCellsInRow(row)(removePossibileValue(_, _, value))
 
   /**
     * Remove a possibility from every cell in a column
     * @param col
     * @param value
     */
-  def removePossibleValueFromColumn(col: Int, value: R) = forCellsInColumn(col)(removePossibileValue(_, _, value))
+  def removePossibleValueFromColumn(col: Int, value: R) = mapCellsInColumn(col)(removePossibileValue(_, _, value))
 
   /**
     * Remove a possibility from every cell in a box
@@ -65,7 +65,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param boxRow
     * @param value
     */
-  def removePossibleValueFromBox(boxCol: Int, boxRow: Int, value: R): Unit = forCellsInBox(boxCol, boxRow)(removePossibileValue(_, _, value))
+  def removePossibleValueFromBox(boxCol: Int, boxRow: Int, value: R): Unit = mapCellsInBox(boxCol, boxRow)(removePossibileValue(_, _, value))
 
   /**
     * Removes a possibility from every cell in a box
@@ -101,7 +101,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
   def solvedScore(): Int = {
     var score = 0
 
-    forAllCells {
+    mapAllCells {
       case (colIdx, rowIdx) =>
         if (getCellValue(colIdx, rowIdx) == emptyCellValue) {
           score += getPossibleValues(colIdx, rowIdx).size

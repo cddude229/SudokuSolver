@@ -14,7 +14,7 @@ abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupin
   def reduce(guesser: SudokuGuesser[R]): Boolean = {
     var reduction = false
 
-    guesser.forAllIndices(
+    guesser.mapAllIndices(
       groupingId => {
         val remaining = guesser.allowedCellValues -- loadUsedItemsInGrouping(guesser, groupingId).toSet
         val possibilitiesInGroupMap = Map[R, AtomicInteger](

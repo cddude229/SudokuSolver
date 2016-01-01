@@ -20,7 +20,7 @@ abstract class ReduceCoupletsInGrouping[R](N: Int) extends ReducingPattern[R] wi
   override def reduce(guesser: SudokuGuesser[R]): Boolean = {
     var reduction = false
 
-    guesser.forAllIndices(
+    guesser.mapAllIndices(
       groupingId => {
         val possibilitiesInGroupMap = mutable.Map[Set[R], AtomicInteger]()
 

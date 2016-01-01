@@ -6,7 +6,7 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
   private[this] val grid: Array[Array[Set[R]]] = Array.ofDim[Set[R]](outerDimension, outerDimension)
 
   // Populate all items by default
-  wrapped.forAllCells {
+  wrapped.mapAllCells {
     (col, row) => {
       grid(col)(row) = if (isDetermined(col, row)) {
         Set[R](getCellValue(col, row))
@@ -36,7 +36,7 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
     if (isSolved()) {
       ret = true
 
-      forAllIndices {
+      mapAllIndices {
         idx => {
           ret = ret && completedSet(getValuesInRow(idx)) && completedSet(getValuesInColumn(idx)) && completedSet(getValuesInBox(idx))
         }

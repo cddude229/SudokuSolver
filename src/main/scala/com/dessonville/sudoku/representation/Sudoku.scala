@@ -101,33 +101,32 @@ trait Sudoku[Value] {
 
   /**
     * Lets you iterate from 0 to outerDimension easily
-    * @param func Func to run.  Must take int and return unit
     */
-  final def forAllIndices(func: Int => Unit) = (0 until outerDimension).foreach(func)
+  final def mapAllIndices[T](func: Int => T): Iterable[T] = (0 until outerDimension).map(func)
 
-  final protected def forColAndRowRange(colRange: Iterable[Int], rowRange: Iterable[Int])(func: (Int, Int) => Unit): Unit = {
-    colRange.foreach {
-      col => rowRange.foreach(func(col, _))
+  final protected def mapColumnAndRowRange[T](columnRange: Iterable[Int], rowRange: Iterable[Int])(func: (Int, Int) => T): Iterable[Iterable[T]] = {
+    columnRange.map {
+      col => rowRange.map(func(col, _))
     }
   }
 
-  final def forAllCells(func: (Int, Int) => Unit) {
-    forColAndRowRange(0 until outerDimension, 0 until outerDimension)(func)
+  final def mapAllCells[T](func: (Int, Int) => T): Iterable[Iterable[T]] = {
+    mapColumnAndRowRange(0 until outerDimension, 0 until outerDimension)(func)
   }
 
-  final def forCellsInRow(row: Int)(func: (Int, Int) => Unit) = forAllIndices(func(_, row))
+  final def mapCellsInRow[T](row: Int)(func: (Int, Int) => T): Iterable[T] = mapAllIndices(func(_, row))
 
-  final def forCellsInColumn(col: Int)(func: (Int, Int) => Unit) = forAllIndices(func(col, _))
+  final def mapCellsInColumn[T](col: Int)(func: (Int, Int) => T): Iterable[T] = mapAllIndices(func(col, _))
 
-  final def forCellsInBox(boxCol: Int, boxRow: Int)(func: (Int, Int) => Unit): Unit = {
+  final def mapCellsInBox[T](boxCol: Int, boxRow: Int)(func: (Int, Int) => T): Iterable[Iterable[T]] = {
     def lowToHigh(i: Int) = lowerBoxIndex(i) to higherBoxIndex(i)
 
-    forColAndRowRange(lowToHigh(boxCol), lowToHigh(boxRow))(func)
+    mapColumnAndRowRange(lowToHigh(boxCol), lowToHigh(boxRow))(func)
   }
 
-  final def forCellsInBox(boxIdx: Int)(func: (Int, Int) => Unit): Unit = {
+  final def mapCellsInBox[T](boxIdx: Int)(func: (Int, Int) => T): Iterable[Iterable[T]] = {
     val (col, row) = getBoxCoordsFromBoxIndex(boxIdx)
-    forCellsInBox(col, row)(func)
+    mapCellsInBox(col, row)(func)
   }
 
   override def toString(): String = (0 until outerDimension).map(getValuesInRow(_).mkString(",")).mkString("\n")
@@ -141,7 +140,7 @@ trait Sudoku[Value] {
   final def getCellsInBox(boxIdx: Int): Seq[(Int, Int)] = {
     // TODO: This is a terrible pattern.  We should have better methods for this.
     val cellsInBox = mutable.ListBuffer[(Int, Int)]()
-    forCellsInBox(boxIdx) {
+    mapCellsInBox(boxIdx) {
       (col, row) =>
         cellsInBox.append((col, row))
     }
@@ -151,7 +150,7 @@ trait Sudoku[Value] {
   final def getCellsInColumn(colIdx: Int): Seq[(Int, Int)] = {
     // TODO: This is a terrible pattern.  We should have better methods for this.
     val cellsInColumn = mutable.ListBuffer[(Int, Int)]()
-    forCellsInColumn(colIdx) {
+    mapCellsInColumn(colIdx) {
       (col, row) =>
         cellsInColumn.append((col, row))
     }
@@ -161,7 +160,7 @@ trait Sudoku[Value] {
   final def getCellsInRow(rowIdx: Int): Seq[(Int, Int)] = {
     // TODO: This is a terrible pattern.  We should have better methods for this.
     val cellsInRow = mutable.ListBuffer[(Int, Int)]()
-    forCellsInRow(rowIdx) {
+    mapCellsInRow(rowIdx) {
       (col, row) =>
         cellsInRow.append((col, row))
     }
