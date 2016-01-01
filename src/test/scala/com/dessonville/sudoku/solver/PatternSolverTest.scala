@@ -16,7 +16,7 @@ class PatternSolverTest extends WordSpec with Matchers {
   val filePath = "./src/test/resources/%s"
 
   val solvableFileFolders = Array (
-    "easy", "medium", "hard"
+    "easy", "medium", "hard", "euler"
   )
 
   val solvableFiles: Array[String] = solvableFileFolders.flatMap {
