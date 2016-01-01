@@ -47,7 +47,7 @@ class BoxToColAndRowClearing[Value] extends ReducingPattern[Value] {
 
         cellsInLineNotInBox.foreach {
           cellCoords =>
-            reduction = guesser.removePossibleValues(cellCoords, valuesToRemove)
+            reduction = guesser.removePossibleValues(cellCoords, valuesToRemove) || reduction
         }
     }
 
