@@ -73,6 +73,19 @@ trait Sudoku[Value] {
     */
   def getCellValue(colIndex: Int, rowIndex: Int): Value
 
+  /**
+    * Set the value for a given cell
+    * @param cellCoordinates
+    * @param value
+    */
+  def setCellValue(cellCoordinates: CellCoordinates, value: Value): Unit = setCellValue(cellCoordinates.columnIndex, cellCoordinates.rowIndex, value)
+
+  /**
+    * Get the value for a given cell* @param cellCoordinates
+    * @return
+    */
+  def getCellValue(cellCoordinates: CellCoordinates): Value = getCellValue(cellCoordinates.columnIndex, cellCoordinates.rowIndex)
+
 
   def getMissingItemsInRow(rowIndex: Int) = determineMissingValues(getValuesInRow(rowIndex))
 
@@ -101,13 +114,15 @@ trait Sudoku[Value] {
     */
   final def mapAllIndices[T](func: Int => T): Iterable[T] = (0 until outerDimension).map(func)
 
-  final protected def mapColumnAndRowRange[T](columnRange: Iterable[Int], rowRange: Iterable[Int])(func: (Int, Int) => T): Iterable[Iterable[T]] = {
+  final protected def mapColumnAndRowRange[T](columnRange: Iterable[Int], rowRange: Iterable[Int])(func: CellCoordinates => T): Iterable[Iterable[T]] = {
     columnRange.map {
-      col => rowRange.map(func(col, _))
+      col => rowRange.map {
+        row => func(ColumnRowIndexBasedCoordinates(col, row, innerDimension, outerDimension))
+      }
     }
   }
 
-  final def mapAllCells[T](func: (Int, Int) => T): Iterable[Iterable[T]] = {
+  final def mapAllCells[T](func: CellCoordinates => T): Iterable[Iterable[T]] = {
     mapColumnAndRowRange(0 until outerDimension, 0 until outerDimension)(func)
   }
 
@@ -119,13 +134,13 @@ trait Sudoku[Value] {
     rowIndex => func(ColumnRowIndexBasedCoordinates(col, rowIndex, innerDimension, outerDimension))
   }
 
-  final def mapCellsInBox[T](boxCol: Int, boxRow: Int)(func: (Int, Int) => T): Iterable[Iterable[T]] = {
+  final def mapCellsInBox[T](boxCol: Int, boxRow: Int)(func: CellCoordinates => T): Iterable[Iterable[T]] = {
     def lowToHigh(i: Int) = lowerBoxIndex(i) to higherBoxIndex(i)
 
     mapColumnAndRowRange(lowToHigh(boxCol), lowToHigh(boxRow))(func)
   }
 
-  final def mapCellsInBox[T](boxIdx: Int)(func: (Int, Int) => T): Iterable[Iterable[T]] = {
+  final def mapCellsInBox[T](boxIdx: Int)(func: CellCoordinates => T): Iterable[Iterable[T]] = {
     val (col, row) = getBoxCoordsFromBoxIndex(boxIdx)
     mapCellsInBox(col, row)(func)
   }
@@ -138,42 +153,33 @@ trait Sudoku[Value] {
     (col, row)
   }
 
-  final def getCellsInBox(boxIdx: Int): Seq[(Int, Int)] = {
-    // TODO: This is a terrible pattern.  We should have better methods for this.
-    val cellsInBox = mutable.ListBuffer[(Int, Int)]()
+  final def getCellsInBox(boxIdx: Int): Iterable[(Int, Int)] = {
     mapCellsInBox(boxIdx) {
-      (col, row) =>
-        cellsInBox.append((col, row))
-    }
-    cellsInBox
+      cellCoordinates =>
+        (cellCoordinates.columnIndex, cellCoordinates.rowIndex)
+    }.flatten
   }
 
-  final def getCellsInColumn(colIdx: Int): Seq[(Int, Int)] = {
-    // TODO: This is a terrible pattern.  We should have better methods for this.
-    val cellsInColumn = mutable.ListBuffer[(Int, Int)]()
+  final def getCellsInColumn(colIdx: Int): Iterable[(Int, Int)] = {
     mapCellsInColumn(colIdx) {
       cellCoordinates =>
-        cellsInColumn.append((cellCoordinates.columnIndex, cellCoordinates.rowIndex))
+        (cellCoordinates.columnIndex, cellCoordinates.rowIndex)
     }
-    cellsInColumn
   }
 
-  final def getCellsInRow(rowIdx: Int): Seq[(Int, Int)] = {
-    // TODO: This is a terrible pattern.  We should have better methods for this.
-    val cellsInRow = mutable.ListBuffer[(Int, Int)]()
+  final def getCellsInRow(rowIdx: Int): Iterable[(Int, Int)] = {
     mapCellsInRow(rowIdx) {
       cellCoordinates =>
-        cellsInRow.append((cellCoordinates.columnIndex, cellCoordinates.rowIndex))
+        (cellCoordinates.columnIndex, cellCoordinates.rowIndex)
     }
-    cellsInRow
   }
 
-  final def getColumnsContainingCells(cells: (Int, Int)*): Seq[Seq[(Int, Int)]] = {
+  final def getColumnsContainingCells(cells: (Int, Int)*): Iterable[Iterable[(Int, Int)]] = {
     val colIndices = cells.map(_._1).toSet
     (0 until outerDimension).filter(colIndices.contains).map(getCellsInColumn)
   }
 
-  final def getRowsContainingCells(cells: (Int, Int)*): Seq[Seq[(Int, Int)]] = {
+  final def getRowsContainingCells(cells: (Int, Int)*): Iterable[Iterable[(Int, Int)]] = {
     val rowIndices = cells.map(_._2).toSet
     (0 until outerDimension).filter(rowIndices.contains).map(getCellsInRow)
   }

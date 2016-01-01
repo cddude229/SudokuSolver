@@ -13,6 +13,13 @@ trait SudokuGuesser[R] extends Sudoku[R] {
   def getPossibleValues(col: Int, row: Int): Set[R]
 
   /**
+    * Get the possibilities for a cell
+    * @param cellCoordinates
+    * @return
+    */
+  def getPossibleValues(cellCoordinates: CellCoordinates): Set[R] = getPossibleValues(cellCoordinates.columnIndex, cellCoordinates.rowIndex)
+
+  /**
     * Remove a set of possibilities from a cell
     * @param col
     * @param row
@@ -35,6 +42,16 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     val coords = boxCoordsContainingCell(col, row)
     removePossibleValueFromBox(coords, value)
     removePossibleValues(col, row, getPossibleValues(col, row) - value) // Remove all but current value from this cell
+  }
+
+  /**
+    * Set the values for a cell and automatically removes the value from all items in the row, column, and box.
+    * Will still remove possibilities if value was already set
+    * @param cellCoordinates
+    * @param value
+    */
+  def setValueAndRemovePossibleValue(cellCoordinates: CellCoordinates, value: R): Unit = {
+    setValueAndRemovePossibleValue(cellCoordinates.columnIndex, cellCoordinates.rowIndex, value)
   }
 
   /**
@@ -72,7 +89,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param boxRow
     * @param value
     */
-  def removePossibleValueFromBox(boxCol: Int, boxRow: Int, value: R): Unit = mapCellsInBox(boxCol, boxRow)(removePossibleValue(_, _, value))
+  def removePossibleValueFromBox(boxCol: Int, boxRow: Int, value: R): Unit = mapCellsInBox(boxCol, boxRow)(removePossibleValue(_, value))
 
   /**
     * Removes a possibility from every cell in a box
@@ -109,9 +126,9 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     var score = 0
 
     mapAllCells {
-      case (colIdx, rowIdx) =>
-        if (getCellValue(colIdx, rowIdx) == emptyCellValue) {
-          score += getPossibleValues(colIdx, rowIdx).size
+      cellCoordinates =>
+        if (getCellValue(cellCoordinates) == emptyCellValue) {
+          score += getPossibleValues(cellCoordinates).size
         }
     }
 

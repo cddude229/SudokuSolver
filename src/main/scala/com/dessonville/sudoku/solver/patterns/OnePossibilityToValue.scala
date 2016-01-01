@@ -11,11 +11,11 @@ class OnePossibilityToValue[R] extends ReducingPattern[R] {
   def reduce(guesser: SudokuGuesser[R]): Boolean = {
     var reduction = false
     guesser.mapAllCells {
-      (col, row) => {
-        val possibilities: Set[R] = guesser.getPossibleValues(col, row)
+      cellCoordinates => {
+        val possibilities: Set[R] = guesser.getPossibleValues(cellCoordinates)
         if (possibilities.size == 1) {
           val value: R = possibilities.head
-          guesser.setValueAndRemovePossibleValue(col, row, value) // Re-setting the value will remove it from later rows
+          guesser.setValueAndRemovePossibleValue(cellCoordinates.columnIndex, cellCoordinates.rowIndex, value) // Re-setting the value will remove it from later rows
           reduction = true
         }
       }
