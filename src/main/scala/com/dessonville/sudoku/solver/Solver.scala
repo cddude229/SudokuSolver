@@ -11,15 +11,20 @@ object PatternSolver extends Solver {
   def solve[R](guesser: SudokuGuesser[R]) {
     val patterns = Array[ReducingPattern[R]](
       new OnePossibilityToValue[R],
+
       new OnlyValueInRow[R],
       new OnlyValueInColumn[R],
       new OnlyValueInBox[R],
+
       new ReduceCoupletsInBox[R](2),
       new ReduceCoupletsInColumn[R](2),
       new ReduceCoupletsInRow[R](2),
+
       new ReduceCoupletsInBox[R](3),
       new ReduceCoupletsInColumn[R](3),
-      new ReduceCoupletsInRow[R](3)
+      new ReduceCoupletsInRow[R](3),
+
+      new BoxToColAndRowClearing[R]
     )
 
     // Iterate over the patterns, reset to first pattern until we're done

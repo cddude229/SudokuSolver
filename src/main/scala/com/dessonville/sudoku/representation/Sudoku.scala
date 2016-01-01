@@ -1,5 +1,7 @@
 package com.dessonville.sudoku.representation
 
+import scala.collection.mutable
+
 /*
 NOTES
 1) Columns and rows are 0 based, 0-8
@@ -130,5 +132,45 @@ trait Sudoku[R] {
     val col = index % (outerDimension / innerDimension)
     val row = index / (outerDimension / innerDimension)
     (col, row)
+  }
+
+  final def getCellsInBox(boxIdx: Int): Seq[(Int, Int)] = {
+    // TODO: This is a terrible pattern.  We should have better methods for this.
+    val cellsInBox = mutable.ListBuffer[(Int, Int)]()
+    forCellsInBox(boxIdx) {
+      (col, row) =>
+        cellsInBox.append((col, row))
+    }
+    cellsInBox
+  }
+
+  final def getCellsInColumn(colIdx: Int): Seq[(Int, Int)] = {
+    // TODO: This is a terrible pattern.  We should have better methods for this.
+    val cellsInColumn = mutable.ListBuffer[(Int, Int)]()
+    forCellsInColumn(colIdx) {
+      (col, row) =>
+        cellsInColumn.append((col, row))
+    }
+    cellsInColumn
+  }
+
+  final def getCellsInRow(rowIdx: Int): Seq[(Int, Int)] = {
+    // TODO: This is a terrible pattern.  We should have better methods for this.
+    val cellsInRow = mutable.ListBuffer[(Int, Int)]()
+    forCellsInRow(rowIdx) {
+      (col, row) =>
+        cellsInRow.append((col, row))
+    }
+    cellsInRow
+  }
+
+  final def getColumnsContainingCells(cells: (Int, Int)*): Seq[Seq[(Int, Int)]] = {
+    val colIndices = cells.map(_._1).toSet
+    (0 until outerDimension).filter(colIndices.contains).map(getCellsInColumn)
+  }
+
+  final def getRowsContainingCells(cells: (Int, Int)*): Seq[Seq[(Int, Int)]] = {
+    val rowIndices = cells.map(_._2).toSet
+    (0 until outerDimension).filter(rowIndices.contains).map(getCellsInRow)
   }
 }
