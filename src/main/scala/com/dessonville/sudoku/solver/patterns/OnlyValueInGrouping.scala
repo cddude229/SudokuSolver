@@ -16,7 +16,7 @@ abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupin
 
     guesser.forAllIndices(
       groupingId => {
-        val remaining = guesser.allowedItems -- loadGrouping(guesser, groupingId).toSet
+        val remaining = guesser.allowedItems -- loadUsedItemsInGrouping(guesser, groupingId).toSet
         val possibilitiesInGroupMap = Map[R, AtomicInteger](
           remaining.map(_ -> new AtomicInteger()).toArray: _*
         )

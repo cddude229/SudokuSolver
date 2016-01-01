@@ -7,8 +7,14 @@ import com.dessonville.sudoku.representation.SudokuGuesser
   * extract this pattern.
   */
 trait PerGroupingHandler[R] {
-  protected def loadGrouping(guesser: SudokuGuesser[R], id: Int): Iterable[R]
+  /**
+    * Loads the items that are already used in a grouping
+    */
+  protected def loadUsedItemsInGrouping(guesser: SudokuGuesser[R], id: Int): Iterable[R]
 
+  /**
+    * Apply a function to each cell in a grouping
+    */
   protected def forCellsInGrouping(guesser: SudokuGuesser[R], id: Int)(func: (Int, Int) => Unit): Unit
 
 }
