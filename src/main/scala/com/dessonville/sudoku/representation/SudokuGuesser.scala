@@ -29,10 +29,10 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param value
     */
   def setValueAndRemovePossibilities(col: Int, row: Int, value: R): Unit = {
-    setValue(col, row, value)
+    setCellValue(col, row, value)
     removePossibilityFromCol(col, value)
     removePossibilityFromRow(row, value)
-    val coords = getBoxCoords(col, row)
+    val coords = boxCoordsContainingCell(col, row)
     removePossibilityFromBox(coords, value)
     removePossibilities(col, row, getPossibilities(col, row) - value) // Remove all but current value from this cell
   }
@@ -80,7 +80,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param row
     * @return
     */
-  def isDetermined(col: Int, row: Int): Boolean = getValue(col, row) != emptyItem
+  def isDetermined(col: Int, row: Int): Boolean = getCellValue(col, row) != emptyCellValue
 
   /**
     * Determine if the puzzle is solved
@@ -103,7 +103,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
 
     forAllCells {
       case (colIdx, rowIdx) =>
-        if (getValue(colIdx, rowIdx) == emptyItem) {
+        if (getCellValue(colIdx, rowIdx) == emptyCellValue) {
           score += getPossibilities(colIdx, rowIdx).size
         }
     }
@@ -149,7 +149,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
                 row2 :+= s"$four $five $six"
                 row3 :+= s"$seven $eight $nine"
               } else {
-                val value = getValue(col, row).toString
+                val value = getCellValue(col, row).toString
                 row1 :+= s"     "
                 row2 :+= s"  $value  "
                 row3 :+= s"     "

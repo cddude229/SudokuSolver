@@ -11,86 +11,86 @@ NOTES
   * Base design for any implementation of a sudoku, including ones that might be faster to load or analyze
   */
 trait Sudoku[R] {
-  def allowedItems: Set[R]
+  def allowedCellValues: Set[R]
 
-  def emptyItem: R
+  def emptyCellValue: R
 
   def innerDimension: Int
 
   def outerDimension: Int
 
-  require(!allowedItems.contains(emptyItem), "Empty square item can not be the allowed item")
-  require(allowedItems.size == outerDimension, "You must have enough allowed items to fill every spot")
+  require(!allowedCellValues.contains(emptyCellValue), "Empty cell value can not be in the allowed cell values")
+  require(allowedCellValues.size == outerDimension, "You must have enough allowed cell values to fill every spot")
 
   /**
     * Gets all the ints in the current row, left to right
     * @param row
     * @return
     */
-  def getRow(row: Int): Iterable[R]
+  def getValuesInRow(row: Int): Iterable[R]
 
   /**
     * Gets all the ints in the current row, top to bottom
     * @param col
     * @return
     */
-  def getColumn(col: Int): Iterable[R]
+  def getValuesInColumn(col: Int): Iterable[R]
 
   /**
     * Gets all the ints in the current box, left to right, top to bottom
-    * @param col
-    * @param row
+    * @param boxColumn
+    * @param boxRow
     * @return
     */
-  def getBox(col: Int, row: Int): Iterable[Iterable[R]]
+  def getValuesInBox(boxColumn: Int, boxRow: Int): Iterable[Iterable[R]]
 
   /**
-    * Get the items in a box, in order, but without enforced grid structure
-    * @param idx
+    * Get the items in a box, in order, using the box index instead of (col, row)
+    * @param boxIndex
     * @return
     */
-  def getBox(idx: Int): Iterable[R] = {
-    val (col, row) = getBoxColAndRowFromIdx(idx)
-    getBox(col, row).flatten
+  def getValuesInBox(boxIndex: Int): Iterable[R] = {
+    val (col, row) = getBoxCoordsFromBoxIndex(boxIndex)
+    getValuesInBox(col, row).flatten
   }
 
   /**
-    * Set the value for a given spot
-    * @param col
-    * @param row
+    * Set the value for a given cell
+    * @param colIndex
+    * @param rowIndex
     * @param value
     */
-  def setValue(col: Int, row: Int, value: R): Unit
+  def setCellValue(colIndex: Int, rowIndex: Int, value: R): Unit
 
   /**
-    * Get the value for a given spot
-    * @param col
-    * @param row
+    * Get the value for a given cell
+    * @param colIndex
+    * @param rowIndex
     * @return
     */
-  def getValue(col: Int, row: Int): R
+  def getCellValue(colIndex: Int, rowIndex: Int): R
 
 
-  def getMissingItemsInRow(row: Int) = determineMissing(getRow(row))
+  def getMissingItemsInRow(rowIndex: Int) = determineMissingValues(getValuesInRow(rowIndex))
 
-  def getMissingItemsInColumn(col: Int) = determineMissing(getColumn(col))
+  def getMissingItemsInColumn(colIndex: Int) = determineMissingValues(getValuesInColumn(colIndex))
 
-  def getMissingItemsInBox(col: Int, row: Int) = determineMissing(getBox(col, row).reduce(_ ++ _))
+  def getMissingItemsInBox(colIndex: Int, rowIndex: Int) = determineMissingValues(getValuesInBox(colIndex, rowIndex).reduce(_ ++ _))
 
-  final protected def determineMissing(items: Iterable[R]): Set[R] = allowedItems -- items.toSet
+  final protected def determineMissingValues(values: Iterable[R]): Set[R] = allowedCellValues -- values.toSet
 
-  final protected def lowBoxIndex(rowOrCol: Int): Int = rowOrCol * innerDimension
+  final protected def lowerBoxIndex(rowOrColIndex: Int): Int = rowOrColIndex * innerDimension
 
-  final protected def highBoxIndex(rowOrCol: Int): Int = lowBoxIndex(rowOrCol + 1) - 1 // Always one less than it
+  final protected def higherBoxIndex(rowOrColIndex: Int): Int = lowerBoxIndex(rowOrColIndex + 1) - 1 // Always one less than it
 
   /**
     * Gives a cell's coordinates, determine it's containing box's coordinates
-    * @param cellCol
-    * @param cellRow
+    * @param cellColIndex
+    * @param cellRowIndex
     * @return
     */
-  final protected def getBoxCoords(cellCol: Int, cellRow: Int): (Int, Int) = {
-    (cellCol / innerDimension, cellRow / innerDimension)
+  final protected def boxCoordsContainingCell(cellColIndex: Int, cellRowIndex: Int): (Int, Int) = {
+    (cellColIndex / innerDimension, cellRowIndex / innerDimension)
   }
 
   /**
@@ -114,21 +114,21 @@ trait Sudoku[R] {
   final def forCellsInColumn(col: Int)(func: (Int, Int) => Unit) = forAllIndices(func(col, _))
 
   final def forCellsInBox(boxCol: Int, boxRow: Int)(func: (Int, Int) => Unit): Unit = {
-    def lowToHigh(i: Int) = lowBoxIndex(i) to highBoxIndex(i)
+    def lowToHigh(i: Int) = lowerBoxIndex(i) to higherBoxIndex(i)
 
     forColAndRowRange(lowToHigh(boxCol), lowToHigh(boxRow))(func)
   }
 
   final def forCellsInBox(boxIdx: Int)(func: (Int, Int) => Unit): Unit = {
-    val (col, row) = getBoxColAndRowFromIdx(boxIdx)
+    val (col, row) = getBoxCoordsFromBoxIndex(boxIdx)
     forCellsInBox(col, row)(func)
   }
 
-  override def toString(): String = (0 until outerDimension).map(getRow(_).mkString(",")).mkString("\n")
+  override def toString(): String = (0 until outerDimension).map(getValuesInRow(_).mkString(",")).mkString("\n")
 
-  private def getBoxColAndRowFromIdx(idx: Int): (Int, Int) = {
-    val col = idx % (outerDimension / innerDimension)
-    val row = idx / (outerDimension / innerDimension)
+  private def getBoxCoordsFromBoxIndex(index: Int): (Int, Int) = {
+    val col = index % (outerDimension / innerDimension)
+    val row = index / (outerDimension / innerDimension)
     (col, row)
   }
 }

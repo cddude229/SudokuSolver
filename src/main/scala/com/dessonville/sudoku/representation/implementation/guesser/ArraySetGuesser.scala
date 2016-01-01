@@ -9,9 +9,9 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
   wrapped.forAllCells {
     (col, row) => {
       grid(col)(row) = if (isDetermined(col, row)) {
-        Set[R](getValue(col, row))
+        Set[R](getCellValue(col, row))
       } else {
-        allowedItems
+        allowedCellValues
       }
     }
   }
@@ -38,7 +38,7 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
 
       forAllIndices {
         idx => {
-          ret = ret && completedSet(getRow(idx)) && completedSet(getColumn(idx)) && completedSet(getBox(idx))
+          ret = ret && completedSet(getValuesInRow(idx)) && completedSet(getValuesInColumn(idx)) && completedSet(getValuesInBox(idx))
         }
       }
     }
@@ -47,6 +47,6 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
   }
 
   private def completedSet(currentItems: Iterable[R]): Boolean = {
-    currentItems.toSet.filter(_ != emptyItem) == allowedItems
+    currentItems.toSet.filter(_ != emptyCellValue) == allowedCellValues
   }
 }
