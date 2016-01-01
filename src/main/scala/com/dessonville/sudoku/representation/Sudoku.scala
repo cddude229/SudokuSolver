@@ -160,28 +160,26 @@ trait Sudoku[Value] {
     }.flatten.map(coordsToCellCoords)
   }
 
-  final def getCellsInColumn(colIdx: Int): Iterable[(Int, Int)] = {
+  final def getCellsInColumn(colIdx: Int): Iterable[CellCoordinates] = {
     mapCellsInColumn(colIdx) {
-      cellCoordinates =>
-        (cellCoordinates.columnIndex, cellCoordinates.rowIndex)
+      cellCoordinates => cellCoordinates
     }
   }
 
-  final def getCellsInRow(rowIdx: Int): Iterable[(Int, Int)] = {
+  final def getCellsInRow(rowIdx: Int): Iterable[CellCoordinates] = {
     mapCellsInRow(rowIdx) {
-      cellCoordinates =>
-        (cellCoordinates.columnIndex, cellCoordinates.rowIndex)
+      cellCoordinates => cellCoordinates
     }
   }
 
   final def getColumnsContainingCells(cells: CellCoordinates*): Iterable[Iterable[CellCoordinates]] = {
     val colIndices = cells.map(_.columnIndex).toSet
-    (0 until outerDimension).filter(colIndices.contains).map(getCellsInColumn(_).map(coordsToCellCoords))
+    (0 until outerDimension).filter(colIndices.contains).map(getCellsInColumn)
   }
 
   final def getRowsContainingCells(cells: CellCoordinates*): Iterable[Iterable[CellCoordinates]] = {
     val rowIndices = cells.map(_.rowIndex).toSet
-    (0 until outerDimension).filter(rowIndices.contains).map(getCellsInRow(_).map(coordsToCellCoords))
+    (0 until outerDimension).filter(rowIndices.contains).map(getCellsInRow)
   }
 
   final def coordsToCellCoords(col: Int, row: Int): CellCoordinates = {
