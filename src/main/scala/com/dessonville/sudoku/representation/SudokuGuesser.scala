@@ -155,7 +155,6 @@ trait SudokuGuesser[R] extends Sudoku[R] {
         }
       }
       var totalSet = ""
-      val squaresList = 0 until 3 // 0 to (outerDimension / innerDimension)
       val outerList = 0 until outerDimension
       // Note: This doesn't scale to more than 3 items
       outerList.foreach {

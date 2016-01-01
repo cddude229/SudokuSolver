@@ -7,8 +7,6 @@ import com.dessonville.sudoku.solver.ReducingPattern
   * If the only set of a value is in a single row or column inside a box, remove it from all other cells in the row/column
   */
 class BoxToColAndRowClearing[R] extends ReducingPattern[R] {
-  type Coords = (Int, Int)
-
   override def reduce(guesser: SudokuGuesser[R]): Boolean = {
     var reduction = false
 
