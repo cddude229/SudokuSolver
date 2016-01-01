@@ -43,7 +43,7 @@ class ArraySetGuesser[Value](private val wrapped: Sudoku[Value]) extends Wrapped
     if (isSolved()) {
       ret = true
 
-      mapAllIndices {
+      getAllIndices.foreach {
         idx => {
           ret = ret && completedSet(getValuesInRow(idx)) && completedSet(getValuesInColumn(idx)) && completedSet(getValuesInBox(idx).flatten)
         }

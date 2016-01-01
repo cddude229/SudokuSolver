@@ -94,7 +94,7 @@ trait Sudoku[Value] {
   /**
     * Lets you iterate from 0 to outerDimension easily
     */
-  final def mapAllIndices[T](func: Int => T): Iterable[T] = (0 until outerDimension).map(func)
+  final def getAllIndices: Iterable[Int] = 0 until outerDimension
 
   final protected def mapColumnAndRowRange[T](columnRange: Iterable[Int], rowRange: Iterable[Int])(func: CellCoordinates => T): Iterable[Iterable[T]] = {
     columnRange.map {
@@ -128,13 +128,13 @@ trait Sudoku[Value] {
   }
 
   final def getCellsInColumn(colIdx: Int): Iterable[CellCoordinates] = {
-    mapAllIndices {
+    getAllIndices.map {
       rowIdx => coordsToCellCoords(colIdx, rowIdx)
     }
   }
 
   final def getCellsInRow(rowIdx: Int): Iterable[CellCoordinates] = {
-    mapAllIndices {
+    getAllIndices.map {
       colIdx => coordsToCellCoords(colIdx, rowIdx)
     }
   }

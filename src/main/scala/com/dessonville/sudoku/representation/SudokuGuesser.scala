@@ -104,7 +104,7 @@ trait SudokuGuesser[Value] extends Sudoku[Value] {
         } else {
           0
         }
-    }.flatten.sum
+    }.sum
   }
 
   override def toString(): String = {
