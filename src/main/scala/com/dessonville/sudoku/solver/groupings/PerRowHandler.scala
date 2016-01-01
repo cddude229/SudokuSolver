@@ -8,7 +8,9 @@ trait PerRowHandler[R] extends PerGroupingHandler[R] {
   override protected def loadUsedItemsInGrouping(guesser: SudokuGuesser[R], id: Int): Iterable[R] = guesser.getValuesInRow(id)
 
   override protected def forCellsInGrouping(guesser: SudokuGuesser[R], id: Int)(func: (Int, Int) => Unit): Unit = {
-    guesser.mapCellsInRow(id)(func)
+    guesser.mapCellsInRow(id) {
+      cellCoordinates => func(cellCoordinates.columnIndex, cellCoordinates.rowIndex)
+    }
   }
 
 }

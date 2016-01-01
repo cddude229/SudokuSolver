@@ -111,7 +111,9 @@ trait Sudoku[Value] {
     mapColumnAndRowRange(0 until outerDimension, 0 until outerDimension)(func)
   }
 
-  final def mapCellsInRow[T](row: Int)(func: (Int, Int) => T): Iterable[T] = mapAllIndices(func(_, row))
+  final def mapCellsInRow[T](row: Int)(func: CellCoordinates => T): Iterable[T] = mapAllIndices {
+    columnIndex => func(ColumnRowIndexBasedCoordinates(columnIndex, row, innerDimension, outerDimension))
+  }
 
   final def mapCellsInColumn[T](col: Int)(func: (Int, Int) => T): Iterable[T] = mapAllIndices(func(col, _))
 
@@ -158,8 +160,8 @@ trait Sudoku[Value] {
     // TODO: This is a terrible pattern.  We should have better methods for this.
     val cellsInRow = mutable.ListBuffer[(Int, Int)]()
     mapCellsInRow(rowIdx) {
-      (col, row) =>
-        cellsInRow.append((col, row))
+      cellCoordinates =>
+        cellsInRow.append((cellCoordinates.columnIndex, cellCoordinates.rowIndex))
     }
     cellsInRow
   }

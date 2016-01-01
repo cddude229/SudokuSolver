@@ -43,21 +43,28 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param row
     * @param value
     */
-  def removePossibileValue(col: Int, row: Int, value: R) = removePossibleValues(col, row, Set(value))
+  def removePossibleValue(col: Int, row: Int, value: R) = removePossibleValues(col, row, Set(value))
+
+  /**
+    * Remove a single possibility from a cell
+    * @param cellCoordinates
+    * @param value
+    */
+  def removePossibleValue(cellCoordinates: CellCoordinates, value: R) = removePossibleValues(cellCoordinates.columnIndex, cellCoordinates.rowIndex, Set(value))
 
   /**
     * Remove a possibility from every cell in a row
     * @param row
     * @param value
     */
-  def removePossibleValueFromRow(row: Int, value: R) = mapCellsInRow(row)(removePossibileValue(_, _, value))
+  def removePossibleValueFromRow(row: Int, value: R) = mapCellsInRow(row)(removePossibleValue(_, value))
 
   /**
     * Remove a possibility from every cell in a column
     * @param col
     * @param value
     */
-  def removePossibleValueFromColumn(col: Int, value: R) = mapCellsInColumn(col)(removePossibileValue(_, _, value))
+  def removePossibleValueFromColumn(col: Int, value: R) = mapCellsInColumn(col)(removePossibleValue(_, _, value))
 
   /**
     * Remove a possibility from every cell in a box
@@ -65,7 +72,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param boxRow
     * @param value
     */
-  def removePossibleValueFromBox(boxCol: Int, boxRow: Int, value: R): Unit = mapCellsInBox(boxCol, boxRow)(removePossibileValue(_, _, value))
+  def removePossibleValueFromBox(boxCol: Int, boxRow: Int, value: R): Unit = mapCellsInBox(boxCol, boxRow)(removePossibleValue(_, _, value))
 
   /**
     * Removes a possibility from every cell in a box
