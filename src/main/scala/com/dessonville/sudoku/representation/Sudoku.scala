@@ -13,6 +13,10 @@ NOTES
   * Base design for any implementation of a sudoku, including ones that might be faster to load or analyze
   */
 trait Sudoku[Value] {
+
+  private[this] class SimpleSudokuCellCoordinates(override val cellIndex: Int)
+    extends SudokuCellCoordinates(cellIndex, innerDimension, outerDimension)
+
   def allowedCellValues: Set[Value]
 
   def emptyCellValue: Value

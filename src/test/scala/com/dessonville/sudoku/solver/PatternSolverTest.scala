@@ -2,20 +2,19 @@ package com.dessonville.sudoku.solver
 
 import java.io.File
 
+import com.dessonville.SudokuTestBase
 import com.dessonville.sudoku.representation.implementation.Array9x9Sudoku
 import com.dessonville.sudoku.representation.implementation.guesser.ArraySetGuesser
 import com.dessonville.sudoku.representation.{Sudoku, SudokuBuilder, SudokuGuesser}
 import org.junit.runner.RunWith
-import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.matchers.Matchers
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
 @RunWith(classOf[JUnitRunner])
-class PatternSolverTest extends WordSpec with Matchers {
+class PatternSolverTest extends SudokuTestBase {
   val filePath = "./src/test/resources/%s"
 
-  val solvableFileFolders = Array (
+  val solvableFileFolders = Array(
     "easy", "medium", "hard", "euler"
   )
 
