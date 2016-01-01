@@ -45,10 +45,8 @@ abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupin
             item => {
               forCellsInGrouping(guesser, groupingId) {
                 cellCoordinates => {
-                  val colIdx = cellCoordinates.columnIndex
-                  val rowIdx = cellCoordinates.rowIndex
-                  if (guesser.getPossibleValues(colIdx, rowIdx).contains(item)) {
-                    guesser.setValueAndRemovePossibleValue(colIdx, rowIdx, item)
+                  if (guesser.getPossibleValues(cellCoordinates).contains(item)) {
+                    guesser.setValueAndRemovePossibleValue(cellCoordinates, item)
                   }
                 }
               }

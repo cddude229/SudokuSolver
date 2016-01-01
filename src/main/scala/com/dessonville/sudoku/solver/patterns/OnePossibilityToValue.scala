@@ -15,7 +15,7 @@ class OnePossibilityToValue[R] extends ReducingPattern[R] {
         val possibilities: Set[R] = guesser.getPossibleValues(cellCoordinates)
         if (possibilities.size == 1) {
           val value: R = possibilities.head
-          guesser.setValueAndRemovePossibleValue(cellCoordinates.columnIndex, cellCoordinates.rowIndex, value) // Re-setting the value will remove it from later rows
+          guesser.setValueAndRemovePossibleValue(cellCoordinates, value) // Re-setting the value will remove it from later rows
           reduction = true
         }
       }

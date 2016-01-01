@@ -21,38 +21,11 @@ trait SudokuGuesser[R] extends Sudoku[R] {
 
   /**
     * Remove a set of possibilities from a cell
-    * @param col
-    * @param row
-    * @param values
-    * @return If anything was removed, returns true
-    */
-  def removePossibleValues(col: Int, row: Int, values: Set[R]): Boolean
-
-  /**
-    * Remove a set of possibilities from a cell
     * @param cellCoordinates
     * @param values
     * @return If anything was removed, returns true
     */
-  def removePossibleValues(cellCoordinates: CellCoordinates, values: Set[R]): Boolean = {
-    removePossibleValues(cellCoordinates.columnIndex, cellCoordinates.rowIndex, values)
-  }
-
-  /**
-    * Set the values for a cell and automatically removes the value from all items in the row, column, and box.
-    * Will still remove possibilities if value was already set
-    * @param col
-    * @param row
-    * @param value
-    */
-  def setValueAndRemovePossibleValue(col: Int, row: Int, value: R): Unit = {
-    setCellValue(col, row, value)
-    removePossibleValueFromColumn(col, value)
-    removePossibleValueFromRow(row, value)
-    val coords = boxCoordsContainingCell(col, row)
-    removePossibleValueFromBox(coords, value)
-    removePossibleValues(col, row, getPossibleValues(col, row) - value) // Remove all but current value from this cell
-  }
+  def removePossibleValues(cellCoordinates: CellCoordinates, values: Set[R]): Boolean
 
   /**
     * Set the values for a cell and automatically removes the value from all items in the row, column, and box.
@@ -61,23 +34,23 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param value
     */
   def setValueAndRemovePossibleValue(cellCoordinates: CellCoordinates, value: R): Unit = {
-    setValueAndRemovePossibleValue(cellCoordinates.columnIndex, cellCoordinates.rowIndex, value)
-  }
+    val col = cellCoordinates.columnIndex
+    val row = cellCoordinates.rowIndex
 
-  /**
-    * Remove a single possibility from a cell
-    * @param col
-    * @param row
-    * @param value
-    */
-  def removePossibleValue(col: Int, row: Int, value: R) = removePossibleValues(col, row, Set(value))
+    setCellValue(cellCoordinates, value)
+    removePossibleValueFromColumn(col, value)
+    removePossibleValueFromRow(row, value)
+    val coords = boxCoordsContainingCell(col, row)
+    removePossibleValueFromBox(coords, value)
+    removePossibleValues(cellCoordinates, getPossibleValues(cellCoordinates) - value) // Remove all but current value from this cell
+  }
 
   /**
     * Remove a single possibility from a cell
     * @param cellCoordinates
     * @param value
     */
-  def removePossibleValue(cellCoordinates: CellCoordinates, value: R) = removePossibleValues(cellCoordinates.columnIndex, cellCoordinates.rowIndex, Set(value))
+  def removePossibleValue(cellCoordinates: CellCoordinates, value: R) = removePossibleValues(cellCoordinates, Set(value))
 
   /**
     * Remove a possibility from every cell in a row

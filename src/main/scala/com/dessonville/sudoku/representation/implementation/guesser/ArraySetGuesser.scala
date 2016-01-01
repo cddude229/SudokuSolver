@@ -1,6 +1,6 @@
 package com.dessonville.sudoku.representation.implementation.guesser
 
-import com.dessonville.sudoku.representation.Sudoku
+import com.dessonville.sudoku.representation.{CellCoordinates, Sudoku}
 
 class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGuesser[R](wrapped) {
   private[this] val grid: Array[Array[Set[R]]] = Array.ofDim[Set[R]](outerDimension, outerDimension)
@@ -20,7 +20,10 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
 
   def getPossibleValues(col: Int, row: Int): Set[R] = grid(col)(row)
 
-  def removePossibleValues(col: Int, row: Int, values: Set[R]): Boolean = {
+  def removePossibleValues(cellCoordinates: CellCoordinates, values: Set[R]): Boolean = {
+    val col = cellCoordinates.columnIndex
+    val row = cellCoordinates.rowIndex
+
     val original = grid(col)(row)
     grid(col)(row) = grid(col)(row) -- values
     grid(col)(row) != original
