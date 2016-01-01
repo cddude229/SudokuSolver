@@ -94,6 +94,23 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     */
   def isCorrect(): Boolean
 
+  /**
+    * The number of possibilities still remaining in the puzzle. 0 = solved.
+    * @return
+    */
+  def solvedScore(): Int = {
+    var score = 0
+
+    forAllCells {
+      case (colIdx, rowIdx) =>
+        if (getValue(colIdx, rowIdx) == emptyItem) {
+          score += getPossibilities(colIdx, rowIdx).size
+        }
+    }
+
+    score
+  }
+
   override def toString(): String = {
     if (isSolved()) {
       super.toString()

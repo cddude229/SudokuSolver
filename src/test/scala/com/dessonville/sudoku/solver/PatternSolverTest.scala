@@ -86,11 +86,17 @@ class PatternSolverTest extends WordSpec with Matchers {
 
     PatternSolver.solve(guesser)
 
-    println(s"$file:")
+    println(s"$file (score: ${guesser.solvedScore()}):")
     println(guesser.toString())
     println("\n\n\n")
 
     assert(guesser.isSolved() == solved, s"Checking $file solved: expected $solved but got ${guesser.isSolved()}")
     assert(guesser.isCorrect() == correct, s"Checking $file correctness: expected $correct but got ${guesser.isCorrect()}")
+
+    if (solved) {
+      assert(guesser.solvedScore() == 0, s"Checking $file score: expected 0 but got ${guesser.solvedScore()}")
+    } else {
+      assert(guesser.solvedScore() != 0, s"Checking $file score: expected not 0, but got 0")
+    }
   }
 }
