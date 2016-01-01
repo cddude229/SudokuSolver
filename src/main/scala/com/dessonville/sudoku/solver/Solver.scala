@@ -12,7 +12,8 @@ object PatternSolver extends Solver {
     val patterns = Array[ReducingPattern[R]](
       new OnePossibilityToValue[R],
       new OnlyValueInRow[R],
-      new OnlyValueInCell[R]
+      new OnlyValueInCell[R],
+      new OnlyValueInBox[R]
     )
 
     // Iterate over the patterns, reset to first pattern until we're done

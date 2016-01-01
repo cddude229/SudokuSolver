@@ -50,8 +50,7 @@ trait Sudoku[R] {
     * @return
     */
   def getBox(idx: Int): Iterable[R] = {
-    val col = idx % (outerDimension / innerDimension)
-    val row = idx / (outerDimension / innerDimension)
+    val (col, row) = getBoxColAndRowFromIdx(idx)
     getBox(col, row).flatten
   }
 
@@ -100,7 +99,7 @@ trait Sudoku[R] {
     */
   final def forAllIndices(func: Int => Unit) = (0 until outerDimension).foreach(func)
 
-  final protected def forColAndRowRange(colRange: Iterable[Int], rowRange: Iterable[Int])(func: (Int, Int) => Unit) {
+  final protected def forColAndRowRange(colRange: Iterable[Int], rowRange: Iterable[Int])(func: (Int, Int) => Unit): Unit = {
     colRange.foreach {
       col => rowRange.foreach(func(col, _))
     }
@@ -114,11 +113,22 @@ trait Sudoku[R] {
 
   final def forCellsInColumn(col: Int)(func: (Int, Int) => Unit) = forAllIndices(func(col, _))
 
-  final def forCellsInBox(boxCol: Int, boxRow: Int)(func: (Int, Int) => Unit) = {
+  final def forCellsInBox(boxCol: Int, boxRow: Int)(func: (Int, Int) => Unit): Unit = {
     def lowToHigh(i: Int) = lowBoxIndex(i) to highBoxIndex(i)
 
     forColAndRowRange(lowToHigh(boxCol), lowToHigh(boxRow))(func)
   }
 
+  final def forCellsInBox(boxIdx: Int)(func: (Int, Int) => Unit): Unit = {
+    val (col, row) = getBoxColAndRowFromIdx(boxIdx)
+    forCellsInBox(col, row)(func)
+  }
+
   override def toString(): String = (0 until outerDimension).map(getRow(_).mkString(",")).mkString("\n")
+
+  private def getBoxColAndRowFromIdx(idx: Int): (Int, Int) = {
+    val col = idx % (outerDimension / innerDimension)
+    val row = idx / (outerDimension / innerDimension)
+    (col, row)
+  }
 }
