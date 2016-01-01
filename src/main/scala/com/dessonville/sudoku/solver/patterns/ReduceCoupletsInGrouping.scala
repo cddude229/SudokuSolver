@@ -26,7 +26,9 @@ abstract class ReduceCoupletsInGrouping[R](N: Int) extends ReducingPattern[R] wi
 
         // Iterate over each cell, and record the recordings of those items.
         forCellsInGrouping(guesser, groupingId) {
-          (colIdx, rowIdx) => {
+          cellCoordinates => {
+            val colIdx = cellCoordinates.columnIndex
+            val rowIdx = cellCoordinates.rowIndex
             if (!guesser.isDetermined(colIdx, rowIdx)) {
               val totalPossibilities = guesser.getPossibleValues(colIdx, rowIdx)
               if (totalPossibilities.size == N) {
@@ -42,7 +44,9 @@ abstract class ReduceCoupletsInGrouping[R](N: Int) extends ReducingPattern[R] wi
           listOfSizeNItems.foreach {
             possibilitiesSet => {
               forCellsInGrouping(guesser, groupingId) {
-                (colIdx, rowIdx) => {
+                cellCoordinates => {
+                  val colIdx = cellCoordinates.columnIndex
+                  val rowIdx = cellCoordinates.rowIndex
                   if (guesser.getPossibleValues(colIdx, rowIdx) != possibilitiesSet) {
                     reduction = guesser.removePossibleValues(colIdx, rowIdx, possibilitiesSet) || reduction
                   }

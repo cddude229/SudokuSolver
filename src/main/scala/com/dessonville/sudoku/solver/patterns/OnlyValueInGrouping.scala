@@ -2,7 +2,7 @@ package com.dessonville.sudoku.solver.patterns
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import com.dessonville.sudoku.representation.SudokuGuesser
+import com.dessonville.sudoku.representation.{CellCoordinates, SudokuGuesser}
 import com.dessonville.sudoku.solver.groupings.{PerBoxHandler, PerColumnHandler, PerRowHandler}
 import com.dessonville.sudoku.solver.{PerGroupingHandler, ReducingPattern}
 
@@ -24,7 +24,9 @@ abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupin
         // TODO: Optimize this to store references and then work based off that instead of counting AtomicInteger
         // Figure out if there's only one occurrence
         forCellsInGrouping(guesser, groupingId) {
-          (colIdx, rowIdx) => {
+          cellCoordinates => {
+            val colIdx = cellCoordinates.columnIndex
+            val rowIdx = cellCoordinates.rowIndex
             if (!guesser.isDetermined(colIdx, rowIdx)) {
               guesser.getPossibleValues(colIdx, rowIdx).foreach {
                 possibility => {
@@ -42,7 +44,9 @@ abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupin
           listOfSizeOneItems.foreach {
             item => {
               forCellsInGrouping(guesser, groupingId) {
-                (colIdx, rowIdx) => {
+                cellCoordinates => {
+                  val colIdx = cellCoordinates.columnIndex
+                  val rowIdx = cellCoordinates.rowIndex
                   if (guesser.getPossibleValues(colIdx, rowIdx).contains(item)) {
                     guesser.setValueAndRemovePossibleValue(colIdx, rowIdx, item)
                   }

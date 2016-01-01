@@ -1,6 +1,6 @@
 package com.dessonville.sudoku.solver
 
-import com.dessonville.sudoku.representation.SudokuGuesser
+import com.dessonville.sudoku.representation.{CellCoordinates, SudokuGuesser}
 
 /**
   * There is a common patterns that iterates on a pre-group (row, cell, box,) so this is an attempt to
@@ -15,6 +15,6 @@ trait PerGroupingHandler[R] {
   /**
     * Apply a function to each cell in a grouping
     */
-  protected def forCellsInGrouping(guesser: SudokuGuesser[R], id: Int)(func: (Int, Int) => Unit): Unit
+  protected def forCellsInGrouping(guesser: SudokuGuesser[R], id: Int)(func: CellCoordinates => Unit): Unit
 
 }
