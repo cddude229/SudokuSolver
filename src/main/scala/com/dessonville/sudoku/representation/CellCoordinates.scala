@@ -55,11 +55,26 @@ trait CellCoordinates {
 
 }
 
-case class SudokuCellCoordinates(override val cellIndex: Int, private val boxWidth: Int,
-                                 private val gridWidth: Int) extends CellCoordinates {
+object CellCoordinates {
+  def boxIndexFromColumnAndRow(columnIndex: Int, rowIndex: Int, boxWidth: Int, gridWidth: Int): Int = {
+    (columnIndex / boxWidth) + ((rowIndex / boxWidth) * (gridWidth / boxWidth))
+  }
+}
+
+case class CellIndexBasedCoordinates(override val cellIndex: Int, private val boxWidth: Int,
+                                     private val gridWidth: Int) extends CellCoordinates {
   override val columnIndex = cellIndex % gridWidth
 
   override val rowIndex = cellIndex / gridWidth
 
-  override val boxIndex = (columnIndex / boxWidth) + ((rowIndex / boxWidth) * (gridWidth / boxWidth))
+  override val boxIndex = CellCoordinates.boxIndexFromColumnAndRow(columnIndex, rowIndex, boxWidth, gridWidth)
+}
+
+case class ColumnRowIndexBasedCoordinates(override val columnIndex: Int, override val rowIndex: Int,
+                                          private val boxWidth: Int, private val gridWidth: Int)
+  extends CellCoordinates {
+
+  override val cellIndex: Int = columnIndex + (rowIndex * gridWidth)
+
+  override val boxIndex: Int = CellCoordinates.boxIndexFromColumnAndRow(columnIndex, rowIndex, boxWidth, gridWidth)
 }

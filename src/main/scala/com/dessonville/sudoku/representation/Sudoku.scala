@@ -14,9 +14,6 @@ NOTES
   */
 trait Sudoku[Value] {
 
-  private[this] class SimpleSudokuCellCoordinates(override val cellIndex: Int)
-    extends SudokuCellCoordinates(cellIndex, innerDimension, outerDimension)
-
   def allowedCellValues: Set[Value]
 
   def emptyCellValue: Value
