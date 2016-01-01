@@ -1,6 +1,6 @@
 package com.dessonville.sudoku.representation.implementation.guesser
 
-import com.dessonville.sudoku.representation.{Sudoku, SudokuGuesser}
+import com.dessonville.sudoku.representation.{CellCoordinates, Sudoku, SudokuGuesser}
 
 abstract class WrappedSudokuGuesser[R](private val wrapped: Sudoku[R]) extends SudokuGuesser[R] {
   def allowedCellValues: Set[R] = wrapped.allowedCellValues
@@ -17,7 +17,7 @@ abstract class WrappedSudokuGuesser[R](private val wrapped: Sudoku[R]) extends S
 
   def getValuesInBox(col: Int, row: Int): Iterable[Iterable[R]] = wrapped.getValuesInBox(col, row)
 
-  def setCellValue(col: Int, row: Int, value: R) = wrapped.setCellValue(col, row, value)
+  def setCellValue(cellCoordinates: CellCoordinates, value: R) = wrapped.setCellValue(cellCoordinates, value)
 
-  def getCellValue(col: Int, row: Int): R = wrapped.getCellValue(col, row)
+  def getCellValue(cellCoordinates: CellCoordinates): R = wrapped.getCellValue(cellCoordinates)
 }

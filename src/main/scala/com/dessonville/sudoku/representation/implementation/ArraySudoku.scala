@@ -1,6 +1,6 @@
 package com.dessonville.sudoku.representation.implementation
 
-import com.dessonville.sudoku.representation.{Sudoku, SudokuBuilder}
+import com.dessonville.sudoku.representation.{CellCoordinates, Sudoku, SudokuBuilder}
 
 class ArraySudoku[R] private[implementation](private val grid: Array[Array[R]], val innerDimension: Int,
                                              val outerDimension: Int, val allowedCellValues: Set[R],
@@ -19,11 +19,13 @@ class ArraySudoku[R] private[implementation](private val grid: Array[Array[R]], 
     }
   }
 
-  def setCellValue(col: Int, row: Int, value: R) {
-    grid(row)(col) = value
+  def setCellValue(cellCoordinates: CellCoordinates, value: R): Unit = {
+    grid(cellCoordinates.rowIndex)(cellCoordinates.columnIndex) = value
   }
 
-  def getCellValue(col: Int, row: Int): R = grid(row)(col)
+  def getCellValue(cellCoordinates: CellCoordinates): R = {
+    grid(cellCoordinates.rowIndex)(cellCoordinates.columnIndex)
+  }
 }
 
 

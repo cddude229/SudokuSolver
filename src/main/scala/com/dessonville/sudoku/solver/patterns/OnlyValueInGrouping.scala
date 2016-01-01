@@ -2,7 +2,7 @@ package com.dessonville.sudoku.solver.patterns
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import com.dessonville.sudoku.representation.{CellCoordinates, SudokuGuesser}
+import com.dessonville.sudoku.representation.SudokuGuesser
 import com.dessonville.sudoku.solver.groupings.{PerBoxHandler, PerColumnHandler, PerRowHandler}
 import com.dessonville.sudoku.solver.{PerGroupingHandler, ReducingPattern}
 

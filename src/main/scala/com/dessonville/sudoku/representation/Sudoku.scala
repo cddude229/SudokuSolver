@@ -1,7 +1,5 @@
 package com.dessonville.sudoku.representation
 
-import scala.collection.mutable
-
 /*
 NOTES
 1) Columns and rows are 0 based, 0-8
@@ -59,32 +57,16 @@ trait Sudoku[Value] {
 
   /**
     * Set the value for a given cell
-    * @param colIndex
-    * @param rowIndex
-    * @param value
-    */
-  def setCellValue(colIndex: Int, rowIndex: Int, value: Value): Unit
-
-  /**
-    * Get the value for a given cell
-    * @param colIndex
-    * @param rowIndex
-    * @return
-    */
-  def getCellValue(colIndex: Int, rowIndex: Int): Value
-
-  /**
-    * Set the value for a given cell
     * @param cellCoordinates
     * @param value
     */
-  def setCellValue(cellCoordinates: CellCoordinates, value: Value): Unit = setCellValue(cellCoordinates.columnIndex, cellCoordinates.rowIndex, value)
+  def setCellValue(cellCoordinates: CellCoordinates, value: Value): Unit
 
   /**
     * Get the value for a given cell* @param cellCoordinates
     * @return
     */
-  def getCellValue(cellCoordinates: CellCoordinates): Value = getCellValue(cellCoordinates.columnIndex, cellCoordinates.rowIndex)
+  def getCellValue(cellCoordinates: CellCoordinates): Value
 
 
   def getMissingItemsInRow(rowIndex: Int) = determineMissingValues(getValuesInRow(rowIndex))
@@ -101,12 +83,11 @@ trait Sudoku[Value] {
 
   /**
     * Gives a cell's coordinates, determine it's containing box's coordinates
-    * @param cellColIndex
-    * @param cellRowIndex
+    * @param cellCoordinates
     * @return
     */
-  final protected def boxCoordsContainingCell(cellColIndex: Int, cellRowIndex: Int): (Int, Int) = {
-    (cellColIndex / innerDimension, cellRowIndex / innerDimension)
+  final protected def boxCoordsContainingCell(cellCoordinates: CellCoordinates): (Int, Int) = {
+    (cellCoordinates.columnIndex / innerDimension, cellCoordinates.rowIndex / innerDimension)
   }
 
   /**

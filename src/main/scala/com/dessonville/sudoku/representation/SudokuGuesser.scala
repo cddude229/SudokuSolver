@@ -32,7 +32,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     setCellValue(cellCoordinates, value)
     removePossibleValueFromColumn(col, value)
     removePossibleValueFromRow(row, value)
-    val coords = boxCoordsContainingCell(col, row)
+    val coords = boxCoordsContainingCell(cellCoordinates)
     removePossibleValueFromBox(coords, value)
     removePossibleValues(cellCoordinates, getPossibleValues(cellCoordinates) - value) // Remove all but current value from this cell
   }
