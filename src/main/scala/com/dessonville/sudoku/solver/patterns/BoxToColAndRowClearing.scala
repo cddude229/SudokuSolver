@@ -15,8 +15,8 @@ class BoxToColAndRowClearing[R] extends ReducingPattern[R] {
     guesser.mapAllIndices {
       boxIndex =>
         val cellsInBox = guesser.getCellsInBox(boxIndex).toSeq
-        val colsToReduce = guesser.getColumnsContainingCells(cellsInBox: _*).map(_.map(guesser.coordsToCellCoords))
-        val rowsToReduce = guesser.getRowsContainingCells(cellsInBox: _*).map(_.map(guesser.coordsToCellCoords))
+        val colsToReduce = guesser.getColumnsContainingCells(cellsInBox: _*)
+        val rowsToReduce = guesser.getRowsContainingCells(cellsInBox: _*)
         reduction = reduceLines(guesser, cellsInBox.map(guesser.coordsToCellCoords), colsToReduce ++ rowsToReduce) || reduction
     }
 

@@ -174,14 +174,14 @@ trait Sudoku[Value] {
     }
   }
 
-  final def getColumnsContainingCells(cells: (Int, Int)*): Iterable[Iterable[(Int, Int)]] = {
+  final def getColumnsContainingCells(cells: (Int, Int)*): Iterable[Iterable[CellCoordinates]] = {
     val colIndices = cells.map(_._1).toSet
-    (0 until outerDimension).filter(colIndices.contains).map(getCellsInColumn)
+    (0 until outerDimension).filter(colIndices.contains).map(getCellsInColumn(_).map(coordsToCellCoords))
   }
 
-  final def getRowsContainingCells(cells: (Int, Int)*): Iterable[Iterable[(Int, Int)]] = {
+  final def getRowsContainingCells(cells: (Int, Int)*): Iterable[Iterable[CellCoordinates]] = {
     val rowIndices = cells.map(_._2).toSet
-    (0 until outerDimension).filter(rowIndices.contains).map(getCellsInRow)
+    (0 until outerDimension).filter(rowIndices.contains).map(getCellsInRow(_).map(coordsToCellCoords))
   }
 
   final def coordsToCellCoords(col: Int, row: Int): CellCoordinates = {
