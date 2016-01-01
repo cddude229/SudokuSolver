@@ -5,16 +5,15 @@ import com.dessonville.sudoku.solver.ReducingPattern
 
 /**
   * If there is only one possible value for the cell, then that should be the value.
-  * @tparam R
   */
-class OnePossibilityToValue[R] extends ReducingPattern[R] {
-  def reduce(guesser: SudokuGuesser[R]): Boolean = {
+class OnePossibilityToValue[Value] extends ReducingPattern[Value] {
+  def reduce(guesser: SudokuGuesser[Value]): Boolean = {
     var reduction = false
     guesser.mapAllCells {
       cellCoordinates => {
-        val possibilities: Set[R] = guesser.getPossibleValues(cellCoordinates)
+        val possibilities: Set[Value] = guesser.getPossibleValues(cellCoordinates)
         if (possibilities.size == 1) {
-          val value: R = possibilities.head
+          val value: Value = possibilities.head
           guesser.setValueAndRemovePossibleValue(cellCoordinates, value) // Re-setting the value will remove it from later rows
           reduction = true
         }

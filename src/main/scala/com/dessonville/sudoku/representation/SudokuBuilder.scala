@@ -1,7 +1,7 @@
 package com.dessonville.sudoku.representation
 
-trait SudokuBuilder[R] {
-  def addRow(row: Iterable[R])
+trait SudokuBuilder[Value] {
+  def addRow(row: Iterable[Value])
 
-  def finish(): Sudoku[R]
+  def finish(): Sudoku[Value]
 }

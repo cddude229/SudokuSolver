@@ -3,13 +3,13 @@ package com.dessonville.sudoku.representation
 /**
   * Typically used to wrap a sudoku.  Used to record known information while analyzing a sudoku
   */
-trait SudokuGuesser[R] extends Sudoku[R] {
+trait SudokuGuesser[Value] extends Sudoku[Value] {
   /**
     * Get the possibilities for a cell
     * @param cellCoordinates
     * @return
     */
-  def getPossibleValues(cellCoordinates: CellCoordinates): Set[R]
+  def getPossibleValues(cellCoordinates: CellCoordinates): Set[Value]
 
   /**
     * Remove a set of possibilities from a cell
@@ -17,7 +17,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param values
     * @return If anything was removed, returns true
     */
-  def removePossibleValues(cellCoordinates: CellCoordinates, values: Set[R]): Boolean
+  def removePossibleValues(cellCoordinates: CellCoordinates, values: Set[Value]): Boolean
 
   /**
     * Set the values for a cell and automatically removes the value from all items in the row, column, and box.
@@ -25,7 +25,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param cellCoordinates
     * @param value
     */
-  def setValueAndRemovePossibleValue(cellCoordinates: CellCoordinates, value: R): Unit = {
+  def setValueAndRemovePossibleValue(cellCoordinates: CellCoordinates, value: Value): Unit = {
     val col = cellCoordinates.columnIndex
     val row = cellCoordinates.rowIndex
 
@@ -42,21 +42,21 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param cellCoordinates
     * @param value
     */
-  def removePossibleValue(cellCoordinates: CellCoordinates, value: R) = removePossibleValues(cellCoordinates, Set(value))
+  def removePossibleValue(cellCoordinates: CellCoordinates, value: Value) = removePossibleValues(cellCoordinates, Set(value))
 
   /**
     * Remove a possibility from every cell in a row
     * @param row
     * @param value
     */
-  def removePossibleValueFromRow(row: Int, value: R) = mapCellsInRow(row)(removePossibleValue(_, value))
+  def removePossibleValueFromRow(row: Int, value: Value) = mapCellsInRow(row)(removePossibleValue(_, value))
 
   /**
     * Remove a possibility from every cell in a column
     * @param col
     * @param value
     */
-  def removePossibleValueFromColumn(col: Int, value: R) = mapCellsInColumn(col)(removePossibleValue(_, value))
+  def removePossibleValueFromColumn(col: Int, value: Value) = mapCellsInColumn(col)(removePossibleValue(_, value))
 
   /**
     * Remove a possibility from every cell in a box
@@ -64,14 +64,14 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param boxRow
     * @param value
     */
-  def removePossibleValueFromBox(boxCol: Int, boxRow: Int, value: R): Unit = mapCellsInBox(boxCol, boxRow)(removePossibleValue(_, value))
+  def removePossibleValueFromBox(boxCol: Int, boxRow: Int, value: Value): Unit = mapCellsInBox(boxCol, boxRow)(removePossibleValue(_, value))
 
   /**
     * Removes a possibility from every cell in a box
     * @param boxCoords Coordinate tuple of (col, row)
     * @param value
     */
-  def removePossibleValueFromBox(boxCoords: (Int, Int), value: R): Unit = removePossibleValueFromBox(boxCoords._1, boxCoords._2, value)
+  def removePossibleValueFromBox(boxCoords: (Int, Int), value: Value): Unit = removePossibleValueFromBox(boxCoords._1, boxCoords._2, value)
 
   /**
     * Is this cell's value already determined?
@@ -111,7 +111,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     if (isSolved()) {
       super.toString()
     } else {
-      def check(set: Set[R], i: Int): String = {
+      def check(set: Set[Value], i: Int): String = {
         if (set.asInstanceOf[Set[Int]].contains(i)) {
           i.toString
         } else {

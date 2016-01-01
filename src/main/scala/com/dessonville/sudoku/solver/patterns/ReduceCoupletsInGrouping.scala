@@ -16,13 +16,13 @@ import scala.collection.mutable
   *
   * TODO: Once the NOTE above is solved, then the OnlyValue case should be the N=1 case of this code.
   */
-abstract class ReduceCoupletsInGrouping[R](N: Int) extends ReducingPattern[R] with PerGroupingHandler[R] {
-  override def reduce(guesser: SudokuGuesser[R]): Boolean = {
+abstract class ReduceCoupletsInGrouping[Value](N: Int) extends ReducingPattern[Value] with PerGroupingHandler[Value] {
+  override def reduce(guesser: SudokuGuesser[Value]): Boolean = {
     var reduction = false
 
     guesser.mapAllIndices(
       groupingId => {
-        val possibilitiesInGroupMap = mutable.Map[Set[R], AtomicInteger]()
+        val possibilitiesInGroupMap = mutable.Map[Set[Value], AtomicInteger]()
 
         // Iterate over each cell, and record the recordings of those items.
         forCellsInGrouping(guesser, groupingId) {
@@ -58,8 +58,8 @@ abstract class ReduceCoupletsInGrouping[R](N: Int) extends ReducingPattern[R] wi
   }
 }
 
-class ReduceCoupletsInBox[R](N: Int) extends ReduceCoupletsInGrouping[R](N) with PerBoxHandler[R]
+class ReduceCoupletsInBox[Value](N: Int) extends ReduceCoupletsInGrouping[Value](N) with PerBoxHandler[Value]
 
-class ReduceCoupletsInColumn[R](N: Int) extends ReduceCoupletsInGrouping[R](N) with PerColumnHandler[R]
+class ReduceCoupletsInColumn[Value](N: Int) extends ReduceCoupletsInGrouping[Value](N) with PerColumnHandler[Value]
 
-class ReduceCoupletsInRow[R](N: Int) extends ReduceCoupletsInGrouping[R](N) with PerRowHandler[R]
+class ReduceCoupletsInRow[Value](N: Int) extends ReduceCoupletsInGrouping[Value](N) with PerRowHandler[Value]

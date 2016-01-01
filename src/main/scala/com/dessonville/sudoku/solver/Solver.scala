@@ -4,27 +4,27 @@ import com.dessonville.sudoku.representation.SudokuGuesser
 import com.dessonville.sudoku.solver.patterns._
 
 trait Solver {
-  def solve[R](guesser: SudokuGuesser[R])
+  def solve[Value](guesser: SudokuGuesser[Value])
 }
 
 object PatternSolver extends Solver {
-  def solve[R](guesser: SudokuGuesser[R]) {
-    val patterns = Array[ReducingPattern[R]](
-      new OnePossibilityToValue[R],
+  def solve[Value](guesser: SudokuGuesser[Value]) {
+    val patterns = Array[ReducingPattern[Value]](
+      new OnePossibilityToValue[Value],
 
-      new OnlyValueInRow[R],
-      new OnlyValueInColumn[R],
-      new OnlyValueInBox[R],
+      new OnlyValueInRow[Value],
+      new OnlyValueInColumn[Value],
+      new OnlyValueInBox[Value],
 
-      new ReduceCoupletsInBox[R](2),
-      new ReduceCoupletsInColumn[R](2),
-      new ReduceCoupletsInRow[R](2),
+      new ReduceCoupletsInBox[Value](2),
+      new ReduceCoupletsInColumn[Value](2),
+      new ReduceCoupletsInRow[Value](2),
 
-      new ReduceCoupletsInBox[R](3),
-      new ReduceCoupletsInColumn[R](3),
-      new ReduceCoupletsInRow[R](3),
+      new ReduceCoupletsInBox[Value](3),
+      new ReduceCoupletsInColumn[Value](3),
+      new ReduceCoupletsInRow[Value](3),
 
-      new BoxToColAndRowClearing[R]
+      new BoxToColAndRowClearing[Value]
     )
 
     // Iterate over the patterns, reset to first pattern until we're done

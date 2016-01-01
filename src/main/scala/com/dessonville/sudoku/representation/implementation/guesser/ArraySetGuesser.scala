@@ -2,8 +2,8 @@ package com.dessonville.sudoku.representation.implementation.guesser
 
 import com.dessonville.sudoku.representation.{CellCoordinates, Sudoku}
 
-class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGuesser[R](wrapped) {
-  private[this] val grid: Array[Array[Set[R]]] = Array.ofDim[Set[R]](outerDimension, outerDimension)
+class ArraySetGuesser[Value](private val wrapped: Sudoku[Value]) extends WrappedSudokuGuesser[Value](wrapped) {
+  private[this] val grid: Array[Array[Set[Value]]] = Array.ofDim[Set[Value]](outerDimension, outerDimension)
 
   // Populate all items by default
   wrapped.mapAllCells {
@@ -11,18 +11,18 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
       val col = cellCoordinates.columnIndex
       val row = cellCoordinates.rowIndex
       grid(col)(row) = if (isDetermined(cellCoordinates)) {
-        Set[R](getCellValue(cellCoordinates))
+        Set[Value](getCellValue(cellCoordinates))
       } else {
         allowedCellValues
       }
     }
   }
 
-  def getPossibleValues(cellCoordinates: CellCoordinates): Set[R] = {
+  def getPossibleValues(cellCoordinates: CellCoordinates): Set[Value] = {
     grid(cellCoordinates.columnIndex)(cellCoordinates.rowIndex)
   }
 
-  def removePossibleValues(cellCoordinates: CellCoordinates, values: Set[R]): Boolean = {
+  def removePossibleValues(cellCoordinates: CellCoordinates, values: Set[Value]): Boolean = {
     val col = cellCoordinates.columnIndex
     val row = cellCoordinates.rowIndex
 
@@ -53,7 +53,7 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
     ret
   }
 
-  private def completedSet(currentItems: Iterable[R]): Boolean = {
+  private def completedSet(currentItems: Iterable[Value]): Boolean = {
     currentItems.toSet.filter(_ != emptyCellValue) == allowedCellValues
   }
 }

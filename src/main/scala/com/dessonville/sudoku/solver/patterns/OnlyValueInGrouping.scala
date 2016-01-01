@@ -10,14 +10,14 @@ import com.dessonville.sudoku.solver.{PerGroupingHandler, ReducingPattern}
   * There are groupings (row, column, box) where if a single cell is the only cell that could possibly containing the
   * value, then we should set the value of that cell to that sole possibility.
   */
-abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupingHandler[R] {
-  def reduce(guesser: SudokuGuesser[R]): Boolean = {
+abstract class OnlyValueInGrouping[Value] extends ReducingPattern[Value] with PerGroupingHandler[Value] {
+  def reduce(guesser: SudokuGuesser[Value]): Boolean = {
     var reduction = false
 
     guesser.mapAllIndices(
       groupingId => {
         val remaining = guesser.allowedCellValues -- loadUsedItemsInGrouping(guesser, groupingId).toSet
-        val possibilitiesInGroupMap = Map[R, AtomicInteger](
+        val possibilitiesInGroupMap = Map[Value, AtomicInteger](
           remaining.map(_ -> new AtomicInteger()).toArray: _*
         )
 
@@ -59,8 +59,8 @@ abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupin
 
 }
 
-class OnlyValueInBox[R] extends OnlyValueInGrouping[R] with PerBoxHandler[R]
+class OnlyValueInBox[Value] extends OnlyValueInGrouping[Value] with PerBoxHandler[Value]
 
-class OnlyValueInColumn[R] extends OnlyValueInGrouping[R] with PerColumnHandler[R]
+class OnlyValueInColumn[Value] extends OnlyValueInGrouping[Value] with PerColumnHandler[Value]
 
-class OnlyValueInRow[R] extends OnlyValueInGrouping[R] with PerRowHandler[R]
+class OnlyValueInRow[Value] extends OnlyValueInGrouping[Value] with PerRowHandler[Value]

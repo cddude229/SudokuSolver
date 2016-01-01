@@ -2,28 +2,28 @@ package com.dessonville.sudoku.representation.implementation
 
 import com.dessonville.sudoku.representation.{CellCoordinates, Sudoku, SudokuBuilder}
 
-class ArraySudoku[R] private[implementation](private val grid: Array[Array[R]], val innerDimension: Int,
-                                             val outerDimension: Int, val allowedCellValues: Set[R],
-                                             val emptyCellValue: R) extends Sudoku[R] {
+class ArraySudoku[Value] private[implementation](private val grid: Array[Array[Value]], val innerDimension: Int,
+                                             val outerDimension: Int, val allowedCellValues: Set[Value],
+                                             val emptyCellValue: Value) extends Sudoku[Value] {
   require(grid.size == outerDimension, "Please make sure you have enough rows.")
   require(grid.forall(_.size == outerDimension), s"All of your rows must have $outerDimension items.")
   require(grid.forall(_.forall(item => allowedCellValues.contains(item) || item == emptyCellValue)), "All values must be in allowedItems or emptyItem")
 
-  def getValuesInRow(row: Int): Iterable[R] = grid(row)
+  def getValuesInRow(row: Int): Iterable[Value] = grid(row)
 
-  def getValuesInColumn(col: Int): Iterable[R] = grid.map(row => row(col))
+  def getValuesInColumn(col: Int): Iterable[Value] = grid.map(row => row(col))
 
-  def getValuesInBox(col: Int, row: Int): Iterable[Iterable[R]] = {
+  def getValuesInBox(col: Int, row: Int): Iterable[Iterable[Value]] = {
     grid.slice(lowerBoxIndex(row), higherBoxIndex(row) + 1).map {
       _.slice(lowerBoxIndex(col), higherBoxIndex(col) + 1).toIterable
     }
   }
 
-  def setCellValue(cellCoordinates: CellCoordinates, value: R): Unit = {
+  def setCellValue(cellCoordinates: CellCoordinates, value: Value): Unit = {
     grid(cellCoordinates.rowIndex)(cellCoordinates.columnIndex) = value
   }
 
-  def getCellValue(cellCoordinates: CellCoordinates): R = {
+  def getCellValue(cellCoordinates: CellCoordinates): Value = {
     grid(cellCoordinates.rowIndex)(cellCoordinates.columnIndex)
   }
 }

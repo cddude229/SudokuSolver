@@ -2,22 +2,22 @@ package com.dessonville.sudoku.representation.implementation.guesser
 
 import com.dessonville.sudoku.representation.{CellCoordinates, Sudoku, SudokuGuesser}
 
-abstract class WrappedSudokuGuesser[R](private val wrapped: Sudoku[R]) extends SudokuGuesser[R] {
-  def allowedCellValues: Set[R] = wrapped.allowedCellValues
+abstract class WrappedSudokuGuesser[Value](private val wrapped: Sudoku[Value]) extends SudokuGuesser[Value] {
+  def allowedCellValues: Set[Value] = wrapped.allowedCellValues
 
-  def emptyCellValue: R = wrapped.emptyCellValue
+  def emptyCellValue: Value = wrapped.emptyCellValue
 
   def innerDimension: Int = wrapped.innerDimension
 
   def outerDimension: Int = wrapped.outerDimension
 
-  def getValuesInRow(row: Int): Iterable[R] = wrapped.getValuesInRow(row)
+  def getValuesInRow(row: Int): Iterable[Value] = wrapped.getValuesInRow(row)
 
-  def getValuesInColumn(col: Int): Iterable[R] = wrapped.getValuesInColumn(col)
+  def getValuesInColumn(col: Int): Iterable[Value] = wrapped.getValuesInColumn(col)
 
-  def getValuesInBox(col: Int, row: Int): Iterable[Iterable[R]] = wrapped.getValuesInBox(col, row)
+  def getValuesInBox(col: Int, row: Int): Iterable[Iterable[Value]] = wrapped.getValuesInBox(col, row)
 
-  def setCellValue(cellCoordinates: CellCoordinates, value: R) = wrapped.setCellValue(cellCoordinates, value)
+  def setCellValue(cellCoordinates: CellCoordinates, value: Value) = wrapped.setCellValue(cellCoordinates, value)
 
-  def getCellValue(cellCoordinates: CellCoordinates): R = wrapped.getCellValue(cellCoordinates)
+  def getCellValue(cellCoordinates: CellCoordinates): Value = wrapped.getCellValue(cellCoordinates)
 }
