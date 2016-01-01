@@ -3,17 +3,13 @@ package com.dessonville.sudoku.solver.patterns
 import java.util.concurrent.atomic.AtomicInteger
 
 import com.dessonville.sudoku.representation.SudokuGuesser
-import com.dessonville.sudoku.solver.ReducingPattern
+import com.dessonville.sudoku.solver.{PerGroupingHandler, ReducingPattern}
 
 /**
   * There are groupings (row, column, box) where if a single cell is the only cell that could possibly containing the
   * value, then we should set the value of that cell to that sole possibility.
   */
-abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] {
-  protected def loadGrouping(guesser: SudokuGuesser[R], id: Int): Iterable[R]
-
-  protected def forCellsInGrouping(guesser: SudokuGuesser[R], id: Int)(func: (Int, Int) => Unit): Unit
-
+abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupingHandler[R] {
   def reduce(guesser: SudokuGuesser[R]): Boolean = {
     var reduction = false
 
