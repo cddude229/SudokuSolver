@@ -45,7 +45,7 @@ class ArraySetGuesser[Value](private val wrapped: Sudoku[Value]) extends Wrapped
 
       mapAllIndices {
         idx => {
-          ret = ret && completedSet(getValuesInRow(idx)) && completedSet(getValuesInColumn(idx)) && completedSet(getValuesInBox(idx))
+          ret = ret && completedSet(getValuesInRow(idx)) && completedSet(getValuesInColumn(idx)) && completedSet(getValuesInBox(idx).flatten)
         }
       }
     }

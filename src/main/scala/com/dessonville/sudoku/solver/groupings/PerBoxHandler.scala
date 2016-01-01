@@ -5,10 +5,10 @@ import com.dessonville.sudoku.solver.PerGroupingHandler
 
 trait PerBoxHandler[Value] extends PerGroupingHandler[Value] {
 
-  override protected def loadUsedItemsInGrouping(guesser: SudokuGuesser[Value], id: Int): Iterable[Value] = guesser.getValuesInBox(id)
+  override protected def loadUsedItemsInGrouping(guesser: SudokuGuesser[Value], id: Int): Iterable[Value] = guesser.getValuesInBox(id).flatten
 
   override protected def forCellsInGrouping(guesser: SudokuGuesser[Value], id: Int)(func: CellCoordinates => Unit): Unit = {
-    guesser.mapCellsInBox(id)(func)
+    guesser.getCellsInBox(id).foreach(func)
   }
 
 }

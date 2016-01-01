@@ -24,21 +24,21 @@ trait Sudoku[Value] {
   require(allowedCellValues.size == outerDimension, "You must have enough allowed cell values to fill every spot")
 
   /**
-    * Gets all the ints in the current row, left to right
+    * Gets all the values in the given row, left to right.  Will return emptyCellValue for unknown cells
     * @param row
     * @return
     */
   def getValuesInRow(row: Int): Iterable[Value]
 
   /**
-    * Gets all the ints in the current row, top to bottom
+    * Gets all the values in the given row, top to bottom.  Will return emptyCellValue for unknown cells
     * @param col
     * @return
     */
   def getValuesInColumn(col: Int): Iterable[Value]
 
   /**
-    * Gets all the ints in the current box, left to right, top to bottom
+    * Gets all the values in the given box, left to right, top to bottom.  Will return emptyCellValue for unknown cells
     * @param boxColumn
     * @param boxRow
     * @return
@@ -46,13 +46,13 @@ trait Sudoku[Value] {
   def getValuesInBox(boxColumn: Int, boxRow: Int): Iterable[Iterable[Value]]
 
   /**
-    * Get the items in a box, in order, using the box index instead of (col, row)
+    * Gets all the values in the given box, left to right, top to bottom.  Will return emptyCellValue for unknown cells
     * @param boxIndex
     * @return
     */
-  def getValuesInBox(boxIndex: Int): Iterable[Value] = {
+  def getValuesInBox(boxIndex: Int): Iterable[Iterable[Value]] = {
     val (col, row) = getBoxCoordsFromBoxIndex(boxIndex)
-    getValuesInBox(col, row).flatten
+    getValuesInBox(col, row)
   }
 
   /**
@@ -63,7 +63,8 @@ trait Sudoku[Value] {
   def setCellValue(cellCoordinates: CellCoordinates, value: Value): Unit
 
   /**
-    * Get the value for a given cell* @param cellCoordinates
+    * Get the value for a given cell
+    * @param cellCoordinates
     * @return
     */
   def getCellValue(cellCoordinates: CellCoordinates): Value
@@ -107,25 +108,6 @@ trait Sudoku[Value] {
     mapColumnAndRowRange(0 until outerDimension, 0 until outerDimension)(func)
   }
 
-  final def mapCellsInRow[T](row: Int)(func: CellCoordinates => T): Iterable[T] = mapAllIndices {
-    columnIndex => func(ColumnRowIndexBasedCoordinates(columnIndex, row, innerDimension, outerDimension))
-  }
-
-  final def mapCellsInColumn[T](col: Int)(func: CellCoordinates => T): Iterable[T] = mapAllIndices {
-    rowIndex => func(ColumnRowIndexBasedCoordinates(col, rowIndex, innerDimension, outerDimension))
-  }
-
-  final def mapCellsInBox[T](boxCol: Int, boxRow: Int)(func: CellCoordinates => T): Iterable[Iterable[T]] = {
-    def lowToHigh(i: Int) = lowerBoxIndex(i) to higherBoxIndex(i)
-
-    mapColumnAndRowRange(lowToHigh(boxCol), lowToHigh(boxRow))(func)
-  }
-
-  final def mapCellsInBox[T](boxIdx: Int)(func: CellCoordinates => T): Iterable[Iterable[T]] = {
-    val (col, row) = getBoxCoordsFromBoxIndex(boxIdx)
-    mapCellsInBox(col, row)(func)
-  }
-
   override def toString(): String = (0 until outerDimension).map(getValuesInRow(_).mkString(",")).mkString("\n")
 
   private def getBoxCoordsFromBoxIndex(index: Int): (Int, Int) = {
@@ -134,22 +116,26 @@ trait Sudoku[Value] {
     (col, row)
   }
 
+  final def getCellsInBox(boxCol: Int, boxRow: Int): Iterable[CellCoordinates] = {
+    def lowToHigh(i: Int) = lowerBoxIndex(i) to higherBoxIndex(i)
+
+    mapColumnAndRowRange(lowToHigh(boxCol), lowToHigh(boxRow))(cellCoordinates => cellCoordinates).flatten
+  }
+
   final def getCellsInBox(boxIdx: Int): Iterable[CellCoordinates] = {
-    mapCellsInBox(boxIdx) {
-      cellCoordinates =>
-        (cellCoordinates.columnIndex, cellCoordinates.rowIndex)
-    }.flatten.map(coordsToCellCoords)
+    val (col, row) = getBoxCoordsFromBoxIndex(boxIdx)
+    getCellsInBox(col, row)
   }
 
   final def getCellsInColumn(colIdx: Int): Iterable[CellCoordinates] = {
-    mapCellsInColumn(colIdx) {
-      cellCoordinates => cellCoordinates
+    mapAllIndices {
+      rowIdx => coordsToCellCoords(colIdx, rowIdx)
     }
   }
 
   final def getCellsInRow(rowIdx: Int): Iterable[CellCoordinates] = {
-    mapCellsInRow(rowIdx) {
-      cellCoordinates => cellCoordinates
+    mapAllIndices {
+      colIdx => coordsToCellCoords(colIdx, rowIdx)
     }
   }
 

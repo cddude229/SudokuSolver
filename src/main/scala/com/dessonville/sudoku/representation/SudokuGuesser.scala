@@ -42,21 +42,21 @@ trait SudokuGuesser[Value] extends Sudoku[Value] {
     * @param cellCoordinates
     * @param value
     */
-  def removePossibleValue(cellCoordinates: CellCoordinates, value: Value) = removePossibleValues(cellCoordinates, Set(value))
+  def removePossibleValue(cellCoordinates: CellCoordinates, value: Value): Unit = removePossibleValues(cellCoordinates, Set(value))
 
   /**
     * Remove a possibility from every cell in a row
     * @param row
     * @param value
     */
-  def removePossibleValueFromRow(row: Int, value: Value) = mapCellsInRow(row)(removePossibleValue(_, value))
+  def removePossibleValueFromRow(row: Int, value: Value): Unit = getCellsInRow(row).foreach(removePossibleValue(_, value))
 
   /**
     * Remove a possibility from every cell in a column
     * @param col
     * @param value
     */
-  def removePossibleValueFromColumn(col: Int, value: Value) = mapCellsInColumn(col)(removePossibleValue(_, value))
+  def removePossibleValueFromColumn(col: Int, value: Value): Unit = getCellsInColumn(col).foreach(removePossibleValue(_, value))
 
   /**
     * Remove a possibility from every cell in a box
@@ -64,7 +64,7 @@ trait SudokuGuesser[Value] extends Sudoku[Value] {
     * @param boxRow
     * @param value
     */
-  def removePossibleValueFromBox(boxCol: Int, boxRow: Int, value: Value): Unit = mapCellsInBox(boxCol, boxRow)(removePossibleValue(_, value))
+  def removePossibleValueFromBox(boxCol: Int, boxRow: Int, value: Value): Unit = getCellsInBox(boxCol, boxRow).foreach(removePossibleValue(_, value))
 
   /**
     * Removes a possibility from every cell in a box
