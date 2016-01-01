@@ -12,10 +12,10 @@ NOTES
 /**
   * Base design for any implementation of a sudoku, including ones that might be faster to load or analyze
   */
-trait Sudoku[R] {
-  def allowedCellValues: Set[R]
+trait Sudoku[Value] {
+  def allowedCellValues: Set[Value]
 
-  def emptyCellValue: R
+  def emptyCellValue: Value
 
   def innerDimension: Int
 
@@ -29,14 +29,14 @@ trait Sudoku[R] {
     * @param row
     * @return
     */
-  def getValuesInRow(row: Int): Iterable[R]
+  def getValuesInRow(row: Int): Iterable[Value]
 
   /**
     * Gets all the ints in the current row, top to bottom
     * @param col
     * @return
     */
-  def getValuesInColumn(col: Int): Iterable[R]
+  def getValuesInColumn(col: Int): Iterable[Value]
 
   /**
     * Gets all the ints in the current box, left to right, top to bottom
@@ -44,14 +44,14 @@ trait Sudoku[R] {
     * @param boxRow
     * @return
     */
-  def getValuesInBox(boxColumn: Int, boxRow: Int): Iterable[Iterable[R]]
+  def getValuesInBox(boxColumn: Int, boxRow: Int): Iterable[Iterable[Value]]
 
   /**
     * Get the items in a box, in order, using the box index instead of (col, row)
     * @param boxIndex
     * @return
     */
-  def getValuesInBox(boxIndex: Int): Iterable[R] = {
+  def getValuesInBox(boxIndex: Int): Iterable[Value] = {
     val (col, row) = getBoxCoordsFromBoxIndex(boxIndex)
     getValuesInBox(col, row).flatten
   }
@@ -62,7 +62,7 @@ trait Sudoku[R] {
     * @param rowIndex
     * @param value
     */
-  def setCellValue(colIndex: Int, rowIndex: Int, value: R): Unit
+  def setCellValue(colIndex: Int, rowIndex: Int, value: Value): Unit
 
   /**
     * Get the value for a given cell
@@ -70,7 +70,7 @@ trait Sudoku[R] {
     * @param rowIndex
     * @return
     */
-  def getCellValue(colIndex: Int, rowIndex: Int): R
+  def getCellValue(colIndex: Int, rowIndex: Int): Value
 
 
   def getMissingItemsInRow(rowIndex: Int) = determineMissingValues(getValuesInRow(rowIndex))
@@ -79,7 +79,7 @@ trait Sudoku[R] {
 
   def getMissingItemsInBox(colIndex: Int, rowIndex: Int) = determineMissingValues(getValuesInBox(colIndex, rowIndex).reduce(_ ++ _))
 
-  final protected def determineMissingValues(values: Iterable[R]): Set[R] = allowedCellValues -- values.toSet
+  final protected def determineMissingValues(values: Iterable[Value]): Set[Value] = allowedCellValues -- values.toSet
 
   final protected def lowerBoxIndex(rowOrColIndex: Int): Int = rowOrColIndex * innerDimension
 
