@@ -9,7 +9,6 @@ trait ReducingPattern[Value] {
   /**
     * Given the guesser, attempt to reduce it to a simpler problem
     * @param guesser
-    * @return True if any reduction was performed, false otherwise
     */
-  def reduce(guesser: SudokuGuesser[Value]): Boolean
+  def reduce(guesser: SudokuGuesser[Value]): Unit
 }

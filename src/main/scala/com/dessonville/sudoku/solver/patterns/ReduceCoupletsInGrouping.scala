@@ -17,9 +17,7 @@ import scala.collection.mutable
   * TODO: Once the NOTE above is solved, then the OnlyValue case should be the N=1 case of this code.
   */
 abstract class ReduceCoupletsInGrouping[Value](N: Int) extends ReducingPattern[Value] with PerGroupingHandler[Value] {
-  override def reduce(guesser: SudokuGuesser[Value]): Boolean = {
-    var reduction = false
-
+  override def reduce(guesser: SudokuGuesser[Value]): Unit = {
     guesser.getAllIndices.foreach(
       groupingId => {
         val possibilitiesInGroupMap = mutable.Map[Set[Value], AtomicInteger]()
@@ -48,7 +46,6 @@ abstract class ReduceCoupletsInGrouping[Value](N: Int) extends ReducingPattern[V
                   if (cellPossibleValues != possibilitiesSet) {
                     if (guesser.removePossibleValues(cellCoordinates, possibilitiesSet)) {
                       println(s"${this.getClass.getSimpleName} - Removed $possibilitiesSet from $cellCoordinates (which has $cellPossibleValues)")
-                      reduction = true
                     }
                   }
                 }
@@ -58,8 +55,6 @@ abstract class ReduceCoupletsInGrouping[Value](N: Int) extends ReducingPattern[V
         }
       }
     )
-
-    reduction
   }
 }
 

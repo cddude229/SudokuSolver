@@ -7,19 +7,15 @@ import com.dessonville.sudoku.solver.ReducingPattern
   * If the only location of a value in a row/column is in a single box, then remove it from everywhere else in that box.
   */
 class ColAndRowToBoxClearing[Value] extends ReducingPattern[Value] {
-  override def reduce(guesser: SudokuGuesser[Value]): Boolean = {
-    var reduction = false
-
+  override def reduce(guesser: SudokuGuesser[Value]): Unit = {
     guesser.getAllIndices.foreach {
       lineIndex =>
-        reduction = reduceLine(guesser, guesser.getCellsInRow(lineIndex)) || reduction
-        reduction = reduceLine(guesser, guesser.getCellsInColumn(lineIndex)) || reduction
+        reduceLine(guesser, guesser.getCellsInRow(lineIndex))
+        reduceLine(guesser, guesser.getCellsInColumn(lineIndex))
     }
-
-    reduction
   }
 
-  private def reduceLine(guesser: SudokuGuesser[Value], lineToReduce: Iterable[CellCoordinates]): Boolean = {
+  private def reduceLine(guesser: SudokuGuesser[Value], lineToReduce: Iterable[CellCoordinates]): Unit = {
     // Figure out the cells in the line in which the Value is present
     val valueToCells: Map[Value, Iterable[CellCoordinates]] = guesser.allowedCellValues.map {
       allowedValue =>
@@ -35,8 +31,6 @@ class ColAndRowToBoxClearing[Value] extends ReducingPattern[Value] {
     }
 
     // Now, remove the values from the other cells in the boxes
-    var reduction = false
-
     valuesInOnlyOneBox.foreach {
       case (value, cellsWithValue) =>
         val boxIndex = cellsWithValue.head.boxIndex
@@ -44,10 +38,8 @@ class ColAndRowToBoxClearing[Value] extends ReducingPattern[Value] {
         val cellsToRemoveFrom = cellsInBox.filterNot(cellsWithValue.toSeq.contains)
         cellsToRemoveFrom.foreach {
           cellToRemove =>
-            reduction = guesser.removePossibleValue(cellToRemove, value) || reduction
+            guesser.removePossibleValue(cellToRemove, value)
         }
     }
-
-    reduction
   }
 }

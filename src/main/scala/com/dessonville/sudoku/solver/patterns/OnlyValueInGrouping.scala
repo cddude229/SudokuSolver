@@ -11,9 +11,7 @@ import com.dessonville.sudoku.solver.{PerGroupingHandler, ReducingPattern}
   * value, then we should set the value of that cell to that sole possibility.
   */
 abstract class OnlyValueInGrouping[Value] extends ReducingPattern[Value] with PerGroupingHandler[Value] {
-  def reduce(guesser: SudokuGuesser[Value]): Boolean = {
-    var reduction = false
-
+  def reduce(guesser: SudokuGuesser[Value]): Unit = {
     guesser.getAllIndices.foreach(
       groupingId => {
         val remaining = guesser.allowedCellValues -- loadUsedItemsInGrouping(guesser, groupingId).toSet
@@ -38,7 +36,6 @@ abstract class OnlyValueInGrouping[Value] extends ReducingPattern[Value] with Pe
         // Find one occurrences and assign if that's the case
         val listOfSizeOneItems = possibilitiesInGroupMap.toList.filter(_._2.get() == 1).map(_._1)
         if (listOfSizeOneItems.nonEmpty) {
-          reduction = true
           listOfSizeOneItems.foreach {
             item => {
               cellsInGrouping(guesser, groupingId).foreach {
@@ -53,8 +50,6 @@ abstract class OnlyValueInGrouping[Value] extends ReducingPattern[Value] with Pe
         }
       }
     )
-
-    reduction
   }
 
 }

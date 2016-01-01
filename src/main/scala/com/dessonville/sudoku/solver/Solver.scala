@@ -1,6 +1,7 @@
 package com.dessonville.sudoku.solver
 
-import com.dessonville.sudoku.representation.SudokuGuesser
+import com.dessonville.sudoku.representation.{CellCoordinates, SudokuGuesser}
+import com.dessonville.sudoku.representation.implementation.guesser.WrappedSudokuGuesser
 import com.dessonville.sudoku.solver.patterns._
 
 trait Solver {
@@ -9,6 +10,7 @@ trait Solver {
 
 object PatternSolver extends Solver {
   def solve[Value](guesser: SudokuGuesser[Value]) {
+    val trackingGuesser = new ReductionTrackingSudokuGuesser[Value](guesser)
     val patterns = Array[ReducingPattern[Value]](
       new OnePossibilityToValue[Value],
 
@@ -30,13 +32,37 @@ object PatternSolver extends Solver {
 
     // Iterate over the patterns, reset to first pattern until we're done
     var idx = 0
-    while (!guesser.isSolved() && idx < patterns.length) {
-      val result = patterns(idx).reduce(guesser)
-      if (result) {
+    while (!trackingGuesser.isSolved() && idx < patterns.length) {
+      patterns(idx).reduce(trackingGuesser)
+
+      if (trackingGuesser.getAndClearFlag()) {
         idx = 0
       } else {
         idx += 1
       }
     }
   }
+}
+
+/**
+  * Tracks if any reductions made a change since last checked
+  */
+class ReductionTrackingSudokuGuesser[Value](wrapped: SudokuGuesser[Value]) extends WrappedSudokuGuesser[Value](wrapped) {
+  private var reducedFlag = false
+
+  def getAndClearFlag(): Boolean = {
+    val ret = reducedFlag
+    reducedFlag = false
+    ret
+  }
+
+  override def removePossibleValues(cellCoordinates: CellCoordinates, values: Set[Value]): Boolean = {
+    val reduced = wrapped.removePossibleValues(cellCoordinates, values)
+    reducedFlag = reduced || reducedFlag
+    reduced
+  }
+
+  override def getPossibleValues(cellCoordinates: CellCoordinates): Set[Value] = wrapped.getPossibleValues(cellCoordinates)
+  override def isSolved(): Boolean = wrapped.isSolved()
+  override def isCorrect(): Boolean = wrapped.isCorrect()
 }
