@@ -6,7 +6,8 @@ import com.dessonville.sudoku.representation.SudokuGuesser
 import com.dessonville.sudoku.solver.ReducingPattern
 
 /**
-  * @author Chris (chris@sumologic.com)
+  * There are groupings (row, column, box) where if a single cell is the only cell that could possibly containing the
+  * value, then we should set the value of that cell to that sole possibility.
   */
 abstract class OnlyValueInSet[R] extends ReducingPattern[R] {
   protected def loadItem(guesser: SudokuGuesser[R], id: Int): Iterable[R]
