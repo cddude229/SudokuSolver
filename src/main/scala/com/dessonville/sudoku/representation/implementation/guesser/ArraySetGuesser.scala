@@ -18,7 +18,9 @@ class ArraySetGuesser[R](private val wrapped: Sudoku[R]) extends WrappedSudokuGu
     }
   }
 
-  def getPossibleValues(col: Int, row: Int): Set[R] = grid(col)(row)
+  def getPossibleValues(cellCoordinates: CellCoordinates): Set[R] = {
+    grid(cellCoordinates.columnIndex)(cellCoordinates.rowIndex)
+  }
 
   def removePossibleValues(cellCoordinates: CellCoordinates, values: Set[R]): Boolean = {
     val col = cellCoordinates.columnIndex

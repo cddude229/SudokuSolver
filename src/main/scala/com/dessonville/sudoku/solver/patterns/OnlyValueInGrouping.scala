@@ -25,10 +25,8 @@ abstract class OnlyValueInGrouping[R] extends ReducingPattern[R] with PerGroupin
         // Figure out if there's only one occurrence
         forCellsInGrouping(guesser, groupingId) {
           cellCoordinates => {
-            val colIdx = cellCoordinates.columnIndex
-            val rowIdx = cellCoordinates.rowIndex
             if (!guesser.isDetermined(cellCoordinates)) {
-              guesser.getPossibleValues(colIdx, rowIdx).foreach {
+              guesser.getPossibleValues(cellCoordinates).foreach {
                 possibility => {
                   possibilitiesInGroupMap.get(possibility).get.incrementAndGet()
                 }

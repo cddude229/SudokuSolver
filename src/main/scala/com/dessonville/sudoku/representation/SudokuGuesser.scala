@@ -6,18 +6,10 @@ package com.dessonville.sudoku.representation
 trait SudokuGuesser[R] extends Sudoku[R] {
   /**
     * Get the possibilities for a cell
-    * @param col
-    * @param row
-    * @return
-    */
-  def getPossibleValues(col: Int, row: Int): Set[R]
-
-  /**
-    * Get the possibilities for a cell
     * @param cellCoordinates
     * @return
     */
-  def getPossibleValues(cellCoordinates: CellCoordinates): Set[R] = getPossibleValues(cellCoordinates.columnIndex, cellCoordinates.rowIndex)
+  def getPossibleValues(cellCoordinates: CellCoordinates): Set[R]
 
   /**
     * Remove a set of possibilities from a cell
@@ -136,7 +128,8 @@ trait SudokuGuesser[R] extends Sudoku[R] {
           var row3 = List[String]()
           outerList.foreach {
             col => {
-              val set = getPossibleValues(col, row)
+              val coords = coordsToCellCoords(col, row)
+              val set = getPossibleValues(coords)
               if (set.size > 1) {
                 val one = check(set, 1)
                 val two = check(set, 2)
@@ -152,7 +145,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
                 row2 :+= s"$four $five $six"
                 row3 :+= s"$seven $eight $nine"
               } else {
-                val value = getCellValue(col, row).toString
+                val value = getCellValue(coords).toString
                 row1 :+= s"     "
                 row2 :+= s"  $value  "
                 row3 :+= s"     "
