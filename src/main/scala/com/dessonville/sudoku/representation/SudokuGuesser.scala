@@ -64,7 +64,7 @@ trait SudokuGuesser[R] extends Sudoku[R] {
     * @param col
     * @param value
     */
-  def removePossibleValueFromColumn(col: Int, value: R) = mapCellsInColumn(col)(removePossibleValue(_, _, value))
+  def removePossibleValueFromColumn(col: Int, value: R) = mapCellsInColumn(col)(removePossibleValue(_, value))
 
   /**
     * Remove a possibility from every cell in a box

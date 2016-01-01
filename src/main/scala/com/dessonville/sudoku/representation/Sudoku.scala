@@ -115,7 +115,9 @@ trait Sudoku[Value] {
     columnIndex => func(ColumnRowIndexBasedCoordinates(columnIndex, row, innerDimension, outerDimension))
   }
 
-  final def mapCellsInColumn[T](col: Int)(func: (Int, Int) => T): Iterable[T] = mapAllIndices(func(col, _))
+  final def mapCellsInColumn[T](col: Int)(func: CellCoordinates => T): Iterable[T] = mapAllIndices {
+    rowIndex => func(ColumnRowIndexBasedCoordinates(col, rowIndex, innerDimension, outerDimension))
+  }
 
   final def mapCellsInBox[T](boxCol: Int, boxRow: Int)(func: (Int, Int) => T): Iterable[Iterable[T]] = {
     def lowToHigh(i: Int) = lowerBoxIndex(i) to higherBoxIndex(i)
@@ -150,8 +152,8 @@ trait Sudoku[Value] {
     // TODO: This is a terrible pattern.  We should have better methods for this.
     val cellsInColumn = mutable.ListBuffer[(Int, Int)]()
     mapCellsInColumn(colIdx) {
-      (col, row) =>
-        cellsInColumn.append((col, row))
+      cellCoordinates =>
+        cellsInColumn.append((cellCoordinates.columnIndex, cellCoordinates.rowIndex))
     }
     cellsInColumn
   }
