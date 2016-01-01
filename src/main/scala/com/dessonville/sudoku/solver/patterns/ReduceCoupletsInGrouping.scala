@@ -24,27 +24,32 @@ abstract class ReduceCoupletsInGrouping[Value](N: Int) extends ReducingPattern[V
       groupingId => {
         val possibilitiesInGroupMap = mutable.Map[Set[Value], AtomicInteger]()
 
-        // Iterate over each cell, and record the recordings of those items.
+        // Iterate over each cell, and record the possible values of those items.
         cellsInGrouping(guesser, groupingId).foreach {
           cellCoordinates => {
             if (!guesser.isDetermined(cellCoordinates)) {
-              val totalPossibilities = guesser.getPossibleValues(cellCoordinates)
-              if (totalPossibilities.size == N) {
-                possibilitiesInGroupMap.getOrElseUpdate(totalPossibilities, new AtomicInteger()).incrementAndGet()
+              val possibleValues = guesser.getPossibleValues(cellCoordinates)
+              if (possibleValues.size == N) {
+                possibilitiesInGroupMap.getOrElseUpdate(possibleValues, new AtomicInteger()).incrementAndGet()
               }
             }
           }
         }
 
-        // Find one occurrences and assign if that's the case
+        // Find N occurrences and assign if that's the case
         val listOfSizeNItems = possibilitiesInGroupMap.toList.filter(_._2.get() == N).map(_._1)
         if (listOfSizeNItems.nonEmpty) {
           listOfSizeNItems.foreach {
             possibilitiesSet => {
               cellsInGrouping(guesser, groupingId).foreach {
                 cellCoordinates => {
-                  if (guesser.getPossibleValues(cellCoordinates) != possibilitiesSet) {
-                    reduction = guesser.removePossibleValues(cellCoordinates, possibilitiesSet) || reduction
+                  val cellPossibleValues = guesser.getPossibleValues(cellCoordinates)
+
+                  if (cellPossibleValues != possibilitiesSet) {
+                    if (guesser.removePossibleValues(cellCoordinates, possibilitiesSet)) {
+                      println(s"${this.getClass.getSimpleName} - Removed $possibilitiesSet from $cellCoordinates (which has $cellPossibleValues)")
+                      reduction = true
+                    }
                   }
                 }
               }
