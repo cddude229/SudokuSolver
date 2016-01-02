@@ -45,7 +45,7 @@ abstract class ReduceCoupletsInGrouping[Value](N: Int) extends ReducingPattern[V
 
                   if (cellPossibleValues != possibilitiesSet) {
                     if (guesser.removePossibleValues(cellCoordinates, possibilitiesSet)) {
-                      println(s"${this.getClass.getSimpleName} - Removed $possibilitiesSet from $cellCoordinates (which has $cellPossibleValues)")
+                      println(s"${this.getClass.getSimpleName}($N) - Removed $possibilitiesSet from $cellCoordinates (which has $cellPossibleValues)")
                     }
                   }
                 }

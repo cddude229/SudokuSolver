@@ -36,7 +36,11 @@ abstract class ReduceCoupletsInGroupingV2[Value](N: Int) extends ReducingPattern
         if (allValues.size == N) {
           val remainingCells = unsolvedCells.filterNot(cellsInCombination.contains)
           remainingCells.foreach {
-            cell => guesser.removePossibleValues(cell, allValues)
+            cell =>
+              val previousValues = guesser.getPossibleValues(cell)
+              if (guesser.removePossibleValues(cell, allValues)) {
+                println(s"${this.getClass.getSimpleName}($N) - Removed $allValues from $cell (which has $previousValues)")
+              }
           }
         }
 

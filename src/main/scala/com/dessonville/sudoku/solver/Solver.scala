@@ -26,6 +26,14 @@ object PatternSolver extends Solver {
       new ReduceCoupletsInColumn[Value](3),
       new ReduceCoupletsInRow[Value](3),
 
+      new ReduceCoupletsInBox[Value](4),
+      new ReduceCoupletsInColumn[Value](4),
+      new ReduceCoupletsInRow[Value](4),
+
+      new ReduceCoupletsInBox[Value](5),
+      new ReduceCoupletsInColumn[Value](5),
+      new ReduceCoupletsInRow[Value](5),
+
       new BoxToColAndRowClearing[Value],
       new ColAndRowToBoxClearing[Value],
 
@@ -39,7 +47,11 @@ object PatternSolver extends Solver {
 
       new ReduceCoupletsInBoxV2[Value](4),
       new ReduceCoupletsInColumnV2[Value](4),
-      new ReduceCoupletsInRowV2[Value](4)
+      new ReduceCoupletsInRowV2[Value](4),
+
+      new ReduceCoupletsInBoxV2[Value](5),
+      new ReduceCoupletsInColumnV2[Value](5),
+      new ReduceCoupletsInRowV2[Value](5)
     )
 
     // Iterate over the patterns, reset to first pattern until we're done
