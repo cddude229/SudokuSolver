@@ -1,12 +1,8 @@
 package com.dessonville.sudoku.solver.patterns
 
-import java.util.concurrent.atomic.AtomicInteger
-
 import com.dessonville.sudoku.representation.{CellCoordinates, SudokuGuesser}
 import com.dessonville.sudoku.solver.groupings.{PerBoxHandler, PerColumnHandler, PerRowHandler}
 import com.dessonville.sudoku.solver.{PerGroupingHandler, ReducingPattern}
-
-import scala.collection.mutable
 
 /**
   * This improves on V1 by fixing the following condition:  The couplets (1,3), (1,3,7), and (1,3,7) would not be
