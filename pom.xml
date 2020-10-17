@@ -71,8 +71,8 @@
 
     <dependency>
       <groupId>org.scalatest</groupId>
-      <artifactId>scalatest_${scala.version.major}.0</artifactId>
-      <version>1.8</version>
+      <artifactId>scalatest_${scala.version.major}</artifactId>
+      <version>1.9.2</version>
     </dependency>
 
     <!-- Apache Commons -->
