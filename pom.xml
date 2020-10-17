@@ -7,7 +7,8 @@
   <artifactId>sudoku</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
-    <scala.version>2.10.2</scala.version>
+    <scala.version.major>2.10</scala.version.major>
+    <scala.version.minor>2</scala.version.minor>
     <scala.fatalWarnings>-Xfatal-warnings</scala.fatalWarnings>
   </properties>
 
@@ -38,19 +39,19 @@
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
-      <version>${scala.version}</version>
+      <version>${scala.version.major}.${scala.version.minor}</version>
     </dependency>
 
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-actors</artifactId>
-      <version>${scala.version}</version>
+      <version>${scala.version.major}.${scala.version.minor}</version>
     </dependency>
 
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-reflect</artifactId>
-      <version>${scala.version}</version>
+      <version>${scala.version.major}.${scala.version.minor}</version>
     </dependency>
 
     <dependency>
@@ -70,7 +71,7 @@
 
     <dependency>
       <groupId>org.scalatest</groupId>
-      <artifactId>scalatest_2.10.0</artifactId>
+      <artifactId>scalatest_${scala.version.major}.0</artifactId>
       <version>1.8</version>
     </dependency>
 
@@ -99,7 +100,7 @@
           </execution>
         </executions>
         <configuration>
-          <scalaVersion>${scala.version}</scalaVersion>
+          <scalaVersion>${scala.version.major}.${scala.version.minor}</scalaVersion>
           <args>
             <arg>-deprecation</arg>
             <arg>-unchecked</arg>
@@ -134,7 +135,7 @@
         <groupId>org.scala-tools</groupId>
         <artifactId>maven-scala-plugin</artifactId>
         <configuration>
-          <scalaVersion>${scala.version}</scalaVersion>
+          <scalaVersion>${scala.version.major}.${scala.version.minor}</scalaVersion>
         </configuration>
       </plugin>
     </plugins>
