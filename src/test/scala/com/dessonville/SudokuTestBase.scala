@@ -1,6 +1,5 @@
 package com.dessonville
 
-import org.scalatest.WordSpec
-import org.scalatest.matchers.{ClassicMatchers, ShouldMatchers}
+import org.scalatest.{Matchers, WordSpec}
 
-trait SudokuTestBase extends WordSpec with ClassicMatchers with ShouldMatchers
+trait SudokuTestBase extends WordSpec with Matchers
