@@ -7,7 +7,7 @@
   <artifactId>sudoku</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
-    <scala.version.major>2.11</scala.version.major>
+    <scala.version.major>2.12</scala.version.major>
     <scala.version.minor>12</scala.version.minor>
     <scala.fatalWarnings>-Xfatal-warnings</scala.fatalWarnings>
   </properties>
@@ -39,12 +39,6 @@
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
-      <version>${scala.version.major}.${scala.version.minor}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-actors</artifactId>
       <version>${scala.version.major}.${scala.version.minor}</version>
     </dependency>
 
