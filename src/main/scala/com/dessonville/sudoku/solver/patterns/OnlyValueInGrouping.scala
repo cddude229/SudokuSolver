@@ -16,7 +16,7 @@ abstract class OnlyValueInGrouping[Value] extends ReducingPattern[Value] with Pe
       groupingId => {
         val remaining = guesser.allowedCellValues -- loadUsedItemsInGrouping(guesser, groupingId).toSet
         val possibilitiesInGroupMap = Map[Value, AtomicInteger](
-          remaining.map(_ -> new AtomicInteger()).toArray: _*
+          remaining.map(_ -> new AtomicInteger()).toSeq: _*
         )
 
         // TODO: Optimize this to store references and then work based off that instead of counting AtomicInteger

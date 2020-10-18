@@ -59,7 +59,7 @@ class PatternSolverTest extends SudokuTestBase {
     }
   }
 
-  private def runAgainstFile9x9(file: String, solved: Boolean, correct: Boolean) {
+  private def runAgainstFile9x9(file: String, solved: Boolean, correct: Boolean): Unit = {
     type R = Int
 
     val theFile = new File(filePath.format(file))

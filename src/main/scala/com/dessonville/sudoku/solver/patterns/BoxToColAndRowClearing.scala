@@ -23,7 +23,7 @@ class BoxToColAndRowClearing[Value] extends ReducingPattern[Value] {
         guesser.getPossibleValues(cellCoords).map {
           value => value -> cellCoords
         }
-    }.groupBy(_._1).mapValues(_.map(_._2).toSet)
+    }.groupBy(_._1).view.mapValues(_.map(_._2).toSet).toMap
 
 
     linesToReduce.foreach {

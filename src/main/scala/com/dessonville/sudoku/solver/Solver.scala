@@ -5,11 +5,11 @@ import com.dessonville.sudoku.representation.implementation.guesser.WrappedSudok
 import com.dessonville.sudoku.solver.patterns._
 
 trait Solver {
-  def solve[Value](guesser: SudokuGuesser[Value])
+  def solve[Value](guesser: SudokuGuesser[Value]): Unit
 }
 
 object PatternSolver extends Solver {
-  def solve[Value](guesser: SudokuGuesser[Value]) {
+  def solve[Value](guesser: SudokuGuesser[Value]): Unit = {
     val trackingGuesser = new ReductionTrackingSudokuGuesser[Value](guesser)
     val patterns = Array[ReducingPattern[Value]](
       new OnePossibilityToValue[Value],
